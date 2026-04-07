@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrailLayers | Upcoming iPhone App for Outdoor Gear Tracking</title>
+  <meta
+    name="description"
+    content="TrailLayers is an upcoming iPhone app for tracking layers, building repeatable outfits, and learning what performs best across weather, effort, and terrain."
+  >
+  <link rel="icon" type="image/png" href="./assets/traillayers-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Instrument+Serif:ital@0;1&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="TrailLayers home">
+        <img src="./assets/traillayers-icon.png" alt="TrailLayers app icon">
+        <span>TrailLayers</span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+        <a href="#screens">Screens</a>
+        <a href="#about">About</a>
+        <a href="#use-cases">Use Cases</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Upcoming iPhone app for serious outdoor kit tracking</p>
+          <h1>Remember what you wore. Learn what layers actually work.</h1>
+          <p class="hero-text">
+            TrailLayers helps hikers, runners, cyclists, and gear-heavy outdoor athletes catalog their layers,
+            build reusable outfits, and log real-world performance across weather, terrain, and effort.
+          </p>
+
+          <div class="hero-actions">
+            <a class="button button-primary" href="#screens">See the product</a>
+            <a class="button button-secondary" href="#about">Why TrailLayers</a>
+          </div>
+
+          <ul class="hero-meta" aria-label="Product highlights">
+            <li>Wardrobe catalog with photos and specs</li>
+            <li>Reusable outfit presets for repeat conditions</li>
+            <li>Activity logs with comfort and weather feedback</li>
+          </ul>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="glow glow-one"></div>
+          <div class="glow glow-two"></div>
+
+          <div class="phone-stack">
+            <section class="phone-mockup phone-wardrobe">
+              <div class="phone-topbar">
+                <span>9:41</span>
+                <span>Wardrobe</span>
+                <span>+</span>
+              </div>
+              <div class="screen-content">
+                <div class="search-bar">Search garments</div>
+                <div class="screen-list">
+                  <article class="garment-row">
+                    <div class="garment-thumb thumb-shell"></div>
+                    <div>
+                      <h3>Merino Base Layer</h3>
+                      <p>Top • Regular fit • Long sleeve</p>
+                    </div>
+                  </article>
+                  <article class="garment-row">
+                    <div class="garment-thumb thumb-jacket"></div>
+                    <div>
+                      <h3>Storm Shell</h3>
+                      <p>Outerwear • Waterproof • Light insulation</p>
+                    </div>
+                  </article>
+                  <article class="garment-row">
+                    <div class="garment-thumb thumb-shoe"></div>
+                    <div>
+                      <h3>Trail Runners</h3>
+                      <p>Footwear • US 10.5 • Wind-ready setup</p>
+                    </div>
+                  </article>
+                </div>
+              </div>
+            </section>
+
+            <section class="phone-mockup phone-outfits">
+              <div class="phone-topbar">
+                <span>9:41</span>
+                <span>Outfits</span>
+                <span>+</span>
+              </div>
+              <div class="screen-content">
+                <article class="outfit-card active">
+                  <div class="outfit-grid">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <div>
+                    <h3>Cold Morning Climb</h3>
+                    <p>Trail run • 3 uses • Baselayer + shell + gloves</p>
+                  </div>
+                </article>
+                <article class="outfit-card">
+                  <div class="outfit-grid warm">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <div>
+                    <h3>Windy Ridge Ride</h3>
+                    <p>Bike • Repeat-ready for variable weather</p>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <section class="phone-mockup phone-logs">
+              <div class="phone-topbar">
+                <span>9:41</span>
+                <span>Activity Logs</span>
+                <span>+</span>
+              </div>
+              <div class="screen-content">
+                <article class="log-summary">
+                  <span class="log-icon">Run</span>
+                  <div>
+                    <h3>Trail Run</h3>
+                    <p>44°F • Light wind • Slightly warm</p>
+                  </div>
+                </article>
+                <article class="insight-panel">
+                  <p class="insight-label">Insight preview</p>
+                  <h3>You ran hot in this shell 3 of 4 times below 50°F.</h3>
+                </article>
+                <article class="weather-strip">
+                  <span>Temp</span>
+                  <strong>44°F</strong>
+                  <span>Wind</span>
+                  <strong>12 mph</strong>
+                  <span>Comfort</span>
+                  <strong>7.8 / 10</strong>
+                </article>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="proof-strip" aria-label="Key capabilities">
+        <article>
+          <strong>Photo-first wardrobe</strong>
+          <span>Capture layers with product details, size, material, and performance traits.</span>
+        </article>
+        <article>
+          <strong>Preset outfit builder</strong>
+          <span>Save proven combinations for trail runs, hikes, rides, and changing seasons.</span>
+        </article>
+        <article>
+          <strong>Performance memory</strong>
+          <span>Log temperature, conditions, and comfort so every future outing gets smarter.</span>
+        </article>
+      </section>
+
+      <section id="screens" class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Screens &amp; product story</p>
+          <h2>A simple loop designed for repeat outdoor use.</h2>
+          <p>
+            TrailLayers is organized around the same sequence outdoor athletes already follow mentally:
+            know your gear, combine it for the day, then learn from the outcome.
+          </p>
+        </div>
+
+        <div class="showcase-grid">
+          <article class="showcase-card">
+            <div class="showcase-art wardrobe-art"></div>
+            <h3>Catalog the kit you actually own</h3>
+            <p>Add photos, categories, insulation, sleeve length, fit, waterproofing, retailer details, and size data in one place.</p>
+          </article>
+          <article class="showcase-card">
+            <div class="showcase-art outfit-art"></div>
+            <h3>Build repeatable outfit systems</h3>
+            <p>Group garments into saved outfit presets so cold starts, shoulder-season rides, and fast weather changes are easier to plan for.</p>
+          </article>
+          <article class="showcase-card">
+            <div class="showcase-art insight-art"></div>
+            <h3>Turn each activity into feedback</h3>
+            <p>Track what you wore, the temperature, effort, and comfort so your next decision comes from evidence, not vague memory.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="about" class="section section-split">
+        <div class="section-heading">
+          <p class="eyebrow">About TrailLayers</p>
+          <h2>The app is built around a gap other outdoor platforms ignore but directly affects your comfort and performance.</h2>
+        </div>
+
+        <div class="about-layout">
+          <article class="text-panel">
+            <p>
+              Route apps help you choose where to go. Training apps help you measure what you did. TrailLayers focuses on
+              the gear layer: what you wore, how it handled the conditions, and what deserves a place in your rotation.
+            </p>
+            <p>
+              The goal is not generic outfit inspiration. It is practical memory for people who train and travel outdoors
+              often enough that small layering decisions change comfort, pace, and confidence.
+            </p>
+          </article>
+
+          <article class="brand-panel">
+            <img src="./assets/traillayers-icon.png" alt="TrailLayers logo illustration">
+            <div>
+              <p class="brand-kicker">Built for an upcoming iOS release</p>
+              <h3>From gear closet to a field-tested system</h3>
+              <p>TrailLayers starts with the products in your wardrobe and ends with a better answer for the next frozen climb, sun exposed race, or intense workout.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="use-cases" class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Use cases</p>
+          <h2>Made for people who think about weather conditions, not just distance and elevation gain.</h2>
+        </div>
+
+        <div class="use-case-grid">
+          <article class="use-case-card">
+            <span class="use-case-tag">Trail runner</span>
+            <h3>Dial in your sun blocking desert setup</h3>
+            <p>Compare sun hoodie, tank top, and ice bandana combinations against actual comfort notes instead of guessing from memory before peak UV exposure.</p>
+          </article>
+          <article class="use-case-card">
+            <span class="use-case-tag">Alpine hiker</span>
+            <h3>Track what earns pack space</h3>
+            <p>See which pieces repeatedly show up in cold, windy, and variable conditions so your kit list stays lean and dependable.</p>
+          </article>
+          <article class="use-case-card">
+            <span class="use-case-tag">Gym Rat</span>
+            <h3>Build outfits that showcase physique</h3>
+            <p>Add photos to your activity log and avoid back to back gym sessions in the same outfit. Sharing and social features coming soon.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section final-cta">
+        <div class="section-heading">
+          <p class="eyebrow">Launch direction</p>
+          <h2>TrailLayers is preparing for an early iPhone test network.</h2>
+          <p>
+            The first version is aimed at gear-conscious outdoor athletes who care about using gear that works.
+            Later, AI layer recommendations, gear sharing, and community features will be added based on feedback from early users.
+            If that sounds like you, sign up for updates and early access below.
+          </p>
+        </div>
+        <div>
+                    <iframe data-tally-src="https://tally.so/embed/rjLxAN?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="647" frameborder="0" marginheight="0" marginwidth="0" title="TrailLayers Support Form"></iframe>
+        <script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}</script>
+        </div>
+        <div class="cta-row">
+          <a class="button button-primary" href="#top">Back to top</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>TrailLayers — <a href="mailto:TrailLayers@proton.me">TrailLayers@proton.me</a></p>
+        &nbsp;·&nbsp;
+        <a href="./privacy.html">Privacy Policy</a>
+        &nbsp;·&nbsp;
+        © <span id="year"></span> TrailLayers
+      </p>
+    </footer>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
