@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shared Outfit — TrailLayers</title>
+  <meta name="description" content="View a shared TrailLayers outfit.">
+  <!-- Open Graph — updated dynamically once data loads -->
+  <meta property="og:title" content="TrailLayers Outfit">
+  <meta property="og:description" content="A shared outfit from TrailLayers.">
+  <meta property="og:image" content="../assets/traillayers-icon.png">
+  <link rel="icon" type="image/png" href="../assets/traillayers-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="./outfit.css">
+</head>
+<body>
+  <div class="page-shell">
+
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="TrailLayers home">
+        <img src="../assets/traillayers-icon.png" alt="TrailLayers app icon">
+        <span>TrailLayers</span>
+      </a>
+      <a class="button button-primary outfit-header-cta" href="#" id="appstore-cta-header" aria-label="Download TrailLayers on the App Store">
+        Download the app
+      </a>
+    </header>
+
+    <main id="outfit-main">
+
+      <!-- Loading state -->
+      <div id="state-loading" class="outfit-state" aria-live="polite" aria-busy="true">
+        <div class="spinner" aria-hidden="true"></div>
+        <p>Loading outfit&hellip;</p>
+      </div>
+
+      <!-- Error / not-found state -->
+      <div id="state-error" class="outfit-state" hidden aria-live="assertive">
+        <div class="state-icon" aria-hidden="true">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+        </div>
+        <h1 class="state-heading">Outfit not found</h1>
+        <p class="state-body">This outfit link is invalid or has been removed by its owner.</p>
+        <a class="button button-primary" href="/">Go to TrailLayers</a>
+      </div>
+
+      <!-- Outfit content — populated by JS -->
+      <div id="state-content" hidden>
+
+        <section class="outfit-hero">
+          <div class="outfit-hero-inner">
+            <p class="eyebrow" id="outfit-activity"></p>
+            <h1 id="outfit-name">Outfit</h1>
+            <p class="outfit-meta-line" id="outfit-date"></p>
+          </div>
+          <div class="outfit-image-wrap" id="outfit-image-wrap" aria-hidden="true">
+            <!-- outfit image injected here if present -->
+          </div>
+        </section>
+
+        <section class="outfit-garments-section" aria-labelledby="garments-heading">
+          <h2 id="garments-heading" class="garments-heading">What&rsquo;s in this outfit</h2>
+          <ul class="garment-list" id="garment-list" role="list">
+            <!-- garment cards injected here -->
+          </ul>
+        </section>
+
+        <section class="outfit-cta-section">
+          <div class="outfit-cta-card">
+            <div class="outfit-cta-copy">
+              <p class="eyebrow">Build yours in TrailLayers</p>
+              <h2 class="outfit-cta-heading">Track every layer. Learn what actually works.</h2>
+              <p>Catalog your outdoor gear, build repeatable outfits, and log real-world comfort so every future outing gets smarter.</p>
+              <a class="button button-primary" href="#" id="appstore-cta-main">Download TrailLayers</a>
+            </div>
+            <div class="outfit-cta-art" aria-hidden="true">
+              <img src="../assets/traillayers-icon.png" alt="">
+            </div>
+          </div>
+        </section>
+
+      </div>
+      <!-- /#state-content -->
+
+    </main>
+
+    <footer class="site-footer outfit-footer">
+      <p>TrailLayers &mdash; <a href="mailto:TrailLayers@proton.me">TrailLayers@proton.me</a></p>
+      <p>
+        <a href="../privacy.html">Privacy Policy</a>
+        &nbsp;&middot;&nbsp;
+        &copy; <span id="year"></span> TrailLayers
+      </p>
+    </footer>
+
+  </div>
+  <!-- /.page-shell -->
+
+  <script src="./outfit.js" type="module"></script>
+</body>
+</html>
