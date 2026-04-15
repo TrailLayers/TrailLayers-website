@@ -38,6 +38,10 @@
   padding: 2rem 1rem;
 }
 
+.outfit-state[hidden] {
+  display: none;
+}
+
 .outfit-state p {
   color: var(--muted);
   margin: 0;
