@@ -41,10 +41,11 @@ function showState(id) {
     const el = document.getElementById(panelId);
     if (!el) return;
     if (panelId === id) {
-      el.hidden = false;
+      el.style.display = "";
+      el.removeAttribute("hidden");
       el.removeAttribute("aria-busy");
     } else {
-      el.hidden = true;
+      el.style.display = "none";
     }
   });
 }
@@ -106,7 +107,7 @@ function placeholderIconHTML(ariaLabel) {
 }
 
 /** Render the outfit hero section (name, activity, image). */
-function renderHero(outfit) {
+function renderHero(outfit, sharedBy) {
   // Activity eyebrow
   const activityEl = document.getElementById("outfit-activity");
   if (activityEl) {
@@ -121,6 +122,17 @@ function renderHero(outfit) {
     nameEl.textContent = outfit.name || "Untitled Outfit";
     // Also update page <title>
     document.title = `${outfit.name || "Outfit"} — TrailLayers`;
+  }
+
+  // Attribution
+  const sharedByEl = document.getElementById("shared-by");
+  if (sharedByEl) {
+    if (sharedBy) {
+      sharedByEl.textContent = `Shared by ${sharedBy}`;
+      sharedByEl.hidden = false;
+    } else {
+      sharedByEl.hidden = true;
+    }
   }
 
   // Date line
@@ -272,6 +284,18 @@ function buildGarmentCard(garment) {
   return li;
 }
 
+/** Sort garments by category: outerwear → top → bottom → footwear → accessory → other. */
+function sortGarments(garments) {
+  const order = ["outerwear", "top", "bottom", "footwear", "accessory"];
+  return [...garments].sort((a, b) => {
+    const ai = order.indexOf(a.category?.toLowerCase() ?? "");
+    const bi = order.indexOf(b.category?.toLowerCase() ?? "");
+    const an = ai === -1 ? order.length : ai;
+    const bn = bi === -1 ? order.length : bi;
+    return an - bn;
+  });
+}
+
 /** Render all garment cards into the list. */
 function renderGarments(garments) {
   const list = document.getElementById("garment-list");
@@ -287,7 +311,7 @@ function renderGarments(garments) {
     return;
   }
 
-  garments.forEach((g) => list.appendChild(buildGarmentCard(g)));
+  sortGarments(garments).forEach((g) => list.appendChild(buildGarmentCard(g)));
 }
 
 /** Wire up all App Store CTA links. */
@@ -356,7 +380,7 @@ async function init() {
       return;
     }
 
-    renderHero(data.outfit);
+    renderHero(data.outfit, data.sharedBy ?? null);
     renderGarments(data.garments ?? []);
     showState("state-content");
 
