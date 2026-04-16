@@ -38,8 +38,15 @@
   padding: 2rem 1rem;
 }
 
-.outfit-state[hidden] {
-  display: none;
+/* Hide any state panel that carries the hidden attribute.
+   !important ensures this beats .outfit-state { display: flex }
+   regardless of specificity, and also covers #state-content which
+   carries no .outfit-state class. This is the single source of truth
+   for panel visibility — showState() only toggles the hidden attribute. */
+#state-loading[hidden],
+#state-error[hidden],
+#state-content[hidden] {
+  display: none !important;
 }
 
 .outfit-state p {

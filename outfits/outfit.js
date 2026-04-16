@@ -41,11 +41,15 @@ function showState(id) {
     const el = document.getElementById(panelId);
     if (!el) return;
     if (panelId === id) {
-      el.style.display = "";
+      // Remove the hidden attribute — CSS will handle display via
+      // [hidden] { display: none !important } in outfit.css.
       el.removeAttribute("hidden");
       el.removeAttribute("aria-busy");
     } else {
-      el.style.display = "none";
+      // Always use the hidden attribute to hide panels; never rely on
+      // inline style.display which can be overridden or cleared
+      // inconsistently across browsers.
+      el.setAttribute("hidden", "");
     }
   });
 }
@@ -357,6 +361,10 @@ async function fetchOutfit(token) {
 // ----------------------------------------------------------------
 
 async function init() {
+  // All three panels start with hidden in the HTML. Reveal loading first
+  // so there is no flash of empty content while the fetch runs.
+  showState("state-loading");
+
   // Set the copyright year
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
