@@ -27,6 +27,10 @@
    State containers (loading / error)
    ---------------------------------------------------------- */
 
+[hidden] {
+  display: none !important;
+}
+
 .outfit-state {
   display: flex;
   flex-direction: column;
@@ -38,14 +42,12 @@
   padding: 2rem 1rem;
 }
 
-/* Hide any state panel that carries the hidden attribute.
-   !important ensures this beats .outfit-state { display: flex }
-   regardless of specificity, and also covers #state-content which
-   carries no .outfit-state class. This is the single source of truth
-   for panel visibility — showState() only toggles the hidden attribute. */
-#state-loading[hidden],
-#state-error[hidden],
-#state-content[hidden] {
+#outfit-main[data-state="loading"] #state-error,
+#outfit-main[data-state="loading"] #state-content,
+#outfit-main[data-state="error"] #state-loading,
+#outfit-main[data-state="error"] #state-content,
+#outfit-main[data-state="content"] #state-loading,
+#outfit-main[data-state="content"] #state-error {
   display: none !important;
 }
 

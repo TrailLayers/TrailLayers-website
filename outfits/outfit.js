@@ -37,19 +37,28 @@ function edgeFunctionUrl(token) {
 /** Swap which top-level state panel is visible. */
 function showState(id) {
   const ids = ["state-loading", "state-error", "state-content"];
+  const main = document.getElementById("outfit-main");
+  const stateName = id.replace("state-", "");
+
+  if (main) {
+    main.dataset.state = stateName;
+  }
+
   ids.forEach((panelId) => {
     const el = document.getElementById(panelId);
     if (!el) return;
+
+    const isActive = panelId === id;
+    el.hidden = !isActive;
+
     if (panelId === id) {
-      // Remove the hidden attribute — CSS will handle display via
-      // [hidden] { display: none !important } in outfit.css.
-      el.removeAttribute("hidden");
-      el.removeAttribute("aria-busy");
+      if (panelId === "state-loading") {
+        el.setAttribute("aria-busy", "true");
+      } else {
+        el.removeAttribute("aria-busy");
+      }
     } else {
-      // Always use the hidden attribute to hide panels; never rely on
-      // inline style.display which can be overridden or cleared
-      // inconsistently across browsers.
-      el.setAttribute("hidden", "");
+      el.removeAttribute("aria-busy");
     }
   });
 }
