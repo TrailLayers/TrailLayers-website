@@ -1,9 +1,9 @@
 /**
  * outfit.js — Shared Outfit page controller
  *
- * URL format: traillayers.app/outfits/?token=<uuid>
+ * URL format: traillayers.app/outfits/?id=<uuid>
  *
- * Reads ?token from the query string, fetches outfit data from the
+ * Reads ?id from the query string, fetches outfit data from the
  * Supabase Edge Function, then renders the result into the DOM.
  *
  * Configuration:
@@ -17,16 +17,16 @@
 
 const SUPABASE_URL = "https://aumkrmgkdhnkkjdwzvdp.supabase.co";
 const CDN_BASE     = "https://cdn.traillayers.app";
-const APP_STORE_URL = "#"; // Replace with actual App Store URL when live
+const APP_STORE_URL = "https://tally.so/r/rjLxAN"; // Replace with App Store URL when live
 
 // ----------------------------------------------------------------
 // Helpers
 // ----------------------------------------------------------------
 
-/** Return the ?token= query param value, or null. */
+/** Return the ?id= query param value, or null. */
 function getToken() {
   const params = new URLSearchParams(window.location.search);
-  return params.get("token") ?? null;
+  return params.get("id") ?? null;
 }
 
 /** Build the Edge Function URL for a given token. */
