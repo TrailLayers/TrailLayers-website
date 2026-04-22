@@ -274,7 +274,6 @@ h3 {
 
 .hero-visual {
   position: relative;
-  min-height: 45rem;
   padding: 1.2rem 0 1rem;
 }
 
@@ -300,7 +299,6 @@ h3 {
   background: rgba(78, 143, 203, 0.22);
 }
 
-.phone-mockup,
 .showcase-card,
 .text-panel,
 .brand-panel,
@@ -314,8 +312,7 @@ h3 {
 }
 
 .use-case-tag,
-.brand-kicker,
-.insight-label {
+.brand-kicker {
   display: inline-flex;
   padding: 0.45rem 0.75rem;
   border-radius: 999px;
@@ -327,225 +324,56 @@ h3 {
   letter-spacing: 0.12em;
 }
 
+/* ── Hero phone frames ─────────────────────────────────────── */
+
 .phone-stack {
+  position: relative;
+  width: 100%;
+  height: 52rem;
+}
+
+.phone-frame {
   position: absolute;
-  inset: 0 0 0 0;
+  width: 60%;
+  /* phone aspect ratio ~390×844 */
+  border-radius: 2.8rem;
+  overflow: hidden;
+  /* dark bezel border mimicking iPhone frame */
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,0.18),
+    0 0 0 10px rgba(10, 20, 32, 0.92),
+    0 32px 72px rgba(10, 20, 32, 0.52);
 }
 
-.phone-mockup {
-  position: absolute;
-  width: 18rem;
-  min-height: 35rem;
-  padding: 0.9rem;
-  border-radius: 2.4rem;
-  background: linear-gradient(180deg, rgba(12, 28, 42, 0.96), rgba(19, 32, 45, 0.92));
-  color: white;
+
+.phone-frame img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
-.phone-mockup::before {
-  content: "";
-  position: absolute;
-  top: 0.75rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 7rem;
-  height: 1.4rem;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
+/* back phone: garment detail — left, rotated back */
+.phone-back {
+  left: 0%;
+  top: 5rem;
+  transform: rotate(-5deg);
+  z-index: 1;
 }
 
-.phone-wardrobe {
-  left: 1rem;
-  top: 5.6rem;
-  transform: rotate(-8deg);
-}
-
-.phone-outfits {
-  left: 13rem;
-  top: 1rem;
+/* mid phone: outfits — center, slight tilt, elevated */
+.phone-mid {
+  left: 32%;
+  top: 0;
+  transform: rotate(1deg);
   z-index: 2;
 }
 
-.phone-logs {
-  right: 0.5rem;
-  top: 7rem;
-  transform: rotate(8deg);
-}
-
-.phone-topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.5rem 0.5rem 1rem;
-  font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.screen-content {
-  min-height: 31rem;
-  padding: 1rem;
-  border-radius: 1.7rem;
-  background:
-    radial-gradient(circle at top, rgba(78, 143, 203, 0.16), transparent 28%),
-    linear-gradient(180deg, #f7fafc 0%, #eef3f7 100%);
-  color: var(--ink);
-}
-
-.search-bar,
-.weather-strip,
-.insight-panel,
-.outfit-card,
-.log-summary,
-.garment-row {
-  border-radius: 1.15rem;
-}
-
-.search-bar {
-  padding: 0.85rem 1rem;
-  margin-bottom: 1rem;
-  background: white;
-  color: #8192a3;
-  border: 1px solid rgba(19, 32, 45, 0.07);
-}
-
-.screen-list {
-  display: grid;
-  gap: 0.8rem;
-}
-
-.garment-row,
-.log-summary {
-  display: grid;
-  grid-template-columns: 3.4rem 1fr;
-  gap: 0.8rem;
-  align-items: center;
-  padding: 0.75rem;
-  background: rgba(255, 255, 255, 0.84);
-  border: 1px solid rgba(19, 32, 45, 0.07);
-}
-
-.garment-row p,
-.outfit-card p,
-.log-summary p,
-.insight-panel p {
-  margin: 0;
-  font-size: 0.86rem;
-  color: #60707f;
-  line-height: 1.45;
-}
-
-.garment-thumb {
-  width: 3.4rem;
-  height: 3.4rem;
-  border-radius: 1rem;
-  background: linear-gradient(135deg, #cad9e8, #f2f5f8);
-  position: relative;
-  overflow: hidden;
-}
-
-.garment-thumb::before {
-  content: "";
-  position: absolute;
-  inset: 0.45rem;
-  border-radius: 0.85rem;
-}
-
-.thumb-shell::before {
-  background: linear-gradient(135deg, #4e8fcb, #204f85);
-}
-
-.thumb-jacket::before {
-  background: linear-gradient(135deg, #285144, #1a2f42);
-}
-
-.thumb-shoe::before {
-  background: linear-gradient(135deg, #d7dee5, #8ca2b7);
-}
-
-.outfit-card {
-  display: grid;
-  grid-template-columns: 4.5rem 1fr;
-  gap: 0.85rem;
-  align-items: center;
-  padding: 0.85rem;
-  margin-bottom: 0.9rem;
-  background: rgba(255, 255, 255, 0.86);
-  border: 1px solid rgba(19, 32, 45, 0.07);
-}
-
-.outfit-card.active {
-  box-shadow: 0 16px 30px rgba(32, 79, 133, 0.15);
-}
-
-.outfit-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0.28rem;
-}
-
-.outfit-grid span {
-  aspect-ratio: 1;
-  border-radius: 0.75rem;
-  background: linear-gradient(135deg, #27507e, #5e9ad3);
-}
-
-.outfit-grid span:nth-child(2),
-.outfit-grid span:nth-child(3) {
-  background: linear-gradient(135deg, #284b42, #4d6f67);
-}
-
-.outfit-grid.warm span {
-  background: linear-gradient(135deg, #f0bb62, #dd8850);
-}
-
-.outfit-grid.warm span:nth-child(2),
-.outfit-grid.warm span:nth-child(4) {
-  background: linear-gradient(135deg, #496580, #88a8bf);
-}
-
-.log-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 3.4rem;
-  height: 3.4rem;
-  border-radius: 1rem;
-  background: linear-gradient(135deg, #204f85, #5b98d1);
-  color: white;
-  font-size: 0.82rem;
-  font-weight: 700;
-}
-
-.insight-panel {
-  margin-top: 1rem;
-  padding: 1rem;
-  background: linear-gradient(135deg, #244452, #1b3147);
-  color: white;
-}
-
-.insight-panel .insight-label {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.82);
-}
-
-.insight-panel h3 {
-  margin-top: 0.9rem;
-  font-size: 1.2rem;
-}
-
-.weather-strip {
-  display: grid;
-  grid-template-columns: repeat(2, auto);
-  gap: 0.3rem 0.9rem;
-  margin-top: 1rem;
-  padding: 0.95rem 1rem;
-  background: rgba(255, 255, 255, 0.86);
-  border: 1px solid rgba(19, 32, 45, 0.07);
-  font-size: 0.82rem;
-}
-
-.weather-strip strong {
-  font-size: 0.95rem;
+/* front phone: activity logs — right, rotated forward */
+.phone-front {
+  left: 62%;
+  top: 4rem;
+  transform: rotate(5deg);
+  z-index: 3;
 }
 
 .proof-strip {
@@ -600,78 +428,23 @@ h3 {
 }
 
 .showcase-art {
-  height: 14rem;
+  /* fixed height preview window — screenshot fills from top, crops naturally */
+  height: 18rem;
   margin-bottom: 1.2rem;
   border-radius: calc(var(--radius-xl) - 0.45rem);
   border: 1px solid rgba(255, 255, 255, 0.65);
+  overflow: hidden;
+  /* subtle inner shadow so screenshot edges blend into the card */
+  box-shadow: inset 0 -2rem 2rem -1rem rgba(255,255,255,0.45);
 }
 
-.wardrobe-art {
-  background:
-    linear-gradient(180deg, transparent 55%, rgba(255, 255, 255, 0.28) 56%),
-    linear-gradient(135deg, #4f8fcb, #214f84);
-  position: relative;
-}
-
-.wardrobe-art::before,
-.wardrobe-art::after,
-.outfit-art::before,
-.outfit-art::after,
-.insight-art::before,
-.insight-art::after {
-  content: "";
-  position: absolute;
-}
-
-.wardrobe-art::before {
-  inset: 1.3rem 56% 3.5rem 1.3rem;
-  background: rgba(255, 255, 255, 0.88);
-  border-radius: 1.4rem;
-}
-
-.wardrobe-art::after {
-  inset: 4.8rem 1.3rem 1.3rem 52%;
-  background: rgba(20, 47, 71, 0.88);
-  border-radius: 1.4rem;
-}
-
-.outfit-art {
-  position: relative;
-  background: linear-gradient(135deg, #eef4f9, #d3e0eb);
-}
-
-.outfit-art::before {
-  inset: 1.3rem;
-  border-radius: 1.6rem;
-  background:
-    linear-gradient(135deg, #234d7f, #5a99d0) top left / calc(50% - 0.35rem) calc(50% - 0.35rem) no-repeat,
-    linear-gradient(135deg, #264f47, #496860) top right / calc(50% - 0.35rem) calc(50% - 0.35rem) no-repeat,
-    linear-gradient(135deg, #efb55b, #d6794e) bottom left / calc(50% - 0.35rem) calc(50% - 0.35rem) no-repeat,
-    linear-gradient(135deg, #95adc3, #5f7890) bottom right / calc(50% - 0.35rem) calc(50% - 0.35rem) no-repeat;
-}
-
-.insight-art {
-  position: relative;
-  background: linear-gradient(180deg, #19324b, #284858 65%, #f0f5f8 65%);
-}
-
-.insight-art::before {
-  left: 1.3rem;
-  right: 1.3rem;
-  top: 1.3rem;
-  height: 4.6rem;
-  border-radius: 1.3rem;
-  background: linear-gradient(135deg, #315a6c, #213949);
-}
-
-.insight-art::after {
-  left: 1.3rem;
-  right: 1.3rem;
-  bottom: 1.3rem;
-  height: 4rem;
-  border-radius: 1.2rem;
-  background:
-    linear-gradient(90deg, #4e8fcb 0 36%, transparent 36% 40%, #f0c067 40% 73%, transparent 73% 77%, #274f4a 77% 100%);
+.showcase-art img {
+  width: 100%;
+  height: auto;
+  display: block;
+  /* align to top so the most interesting UI (nav + first content) shows */
+  object-fit: cover;
+  object-position: top center;
 }
 
 .about-layout {
@@ -728,21 +501,39 @@ h3 {
     grid-template-columns: 1fr;
   }
 
-  .hero-visual {
-    min-height: 50rem;
+  /* switch to flex row so phones don't overflow their container */
+  .phone-stack {
+    position: relative;
+    inset: auto;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem 0.5rem;
   }
 
-  .phone-wardrobe {
-    left: 0.5rem;
+  .phone-frame {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: calc(33% - 0.67rem);
+    transform: none;
   }
 
-  .phone-outfits {
-    left: 50%;
-    transform: translateX(-50%);
+  .phone-back {
+    transform: rotate(-2deg);
+    align-self: flex-start;
+    margin-top: 1.2rem;
   }
 
-  .phone-logs {
-    right: 0.5rem;
+  .phone-mid {
+    transform: none;
+  }
+
+  .phone-front {
+    transform: rotate(2deg);
+    align-self: flex-start;
+    margin-top: 1.2rem;
   }
 
   .showcase-grid,
@@ -785,39 +576,6 @@ h3 {
     padding-top: 3rem;
   }
 
-  .hero-visual {
-    min-height: auto;
-    padding-top: 8rem;
-  }
-
-  .feature-poster,
-  .phone-stack,
-  .phone-mockup {
-    position: relative;
-  }
-
-  .feature-poster {
-    width: 100%;
-    margin-bottom: 1rem;
-  }
-
-  .phone-stack {
-    inset: auto;
-    display: grid;
-    gap: 1rem;
-  }
-
-  .phone-mockup,
-  .phone-wardrobe,
-  .phone-outfits,
-  .phone-logs {
-    width: 100%;
-    top: auto;
-    left: auto;
-    right: auto;
-    transform: none;
-  }
-
   .proof-strip,
   .showcase-grid,
   .use-case-grid,
@@ -853,7 +611,19 @@ h3 {
     width: 100%;
   }
 
-  .screen-content {
-    padding: 0.8rem;
+  /* On very small screens show only the center (outfits) phone */
+  .phone-stack {
+    justify-content: center;
+  }
+
+  .phone-back,
+  .phone-front {
+    display: none;
+  }
+
+  .phone-mid {
+    position: relative;
+    width: min(72%, 18rem);
+    transform: none;
   }
 }
