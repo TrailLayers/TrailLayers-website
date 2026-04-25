@@ -1,31 +1,18 @@
 /* =========================================================
    Shared Outfit page — scoped styles
-   Depends on the site-wide styles.css for tokens + base
    ========================================================= */
 
-/* ----------------------------------------------------------
-   Layout shell overrides for this page
-   ---------------------------------------------------------- */
-
-/* The site-footer selector in styles.css targets width via
-   a rule that groups .site-header, .hero, .proof-strip etc.
-   We replicate the constraint here for .outfit-footer. */
 .outfit-footer {
   width: min(calc(100% - 2rem), var(--max-width));
   margin: 0 auto;
 }
 
-/* Constrain the outfit-header CTA button size in the header */
 .outfit-header-cta {
   min-height: 2.4rem;
   padding: 0 1rem;
   font-size: 0.88rem;
   white-space: nowrap;
 }
-
-/* ----------------------------------------------------------
-   State containers (loading / error)
-   ---------------------------------------------------------- */
 
 [hidden] {
   display: none !important;
@@ -38,8 +25,8 @@
   justify-content: center;
   gap: 1rem;
   min-height: 60vh;
-  text-align: center;
   padding: 2rem 1rem;
+  text-align: center;
 }
 
 #outfit-main[data-state="loading"] #state-error,
@@ -56,7 +43,6 @@
   margin: 0;
 }
 
-/* Spinner */
 .spinner {
   width: 2.4rem;
   height: 2.4rem;
@@ -70,17 +56,16 @@
   to { transform: rotate(360deg); }
 }
 
-/* Error state icon */
 .state-icon {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 5rem;
   height: 5rem;
+  margin-bottom: 0.5rem;
   border-radius: 50%;
   background: rgba(39, 79, 74, 0.08);
   color: var(--forest);
-  margin-bottom: 0.5rem;
 }
 
 .state-heading {
@@ -90,74 +75,83 @@
 }
 
 .state-body {
-  color: var(--muted);
   max-width: 28rem;
   margin: 0 0 0.75rem;
+  color: var(--muted);
 }
 
 /* ----------------------------------------------------------
-   Outfit hero section
+   Header
    ---------------------------------------------------------- */
 
 .outfit-hero {
   width: min(calc(100% - 2rem), var(--max-width));
   margin: 0 auto;
-  padding: 3rem 0 1.5rem;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 2rem;
-  align-items: center;
+  padding: 4.2rem 0 2.6rem;
+  text-align: center;
 }
 
 .outfit-hero-inner {
-  min-width: 0; /* prevent overflow in grid */
+  max-width: 58rem;
+  margin: 0 auto;
 }
 
-.outfit-hero-inner .eyebrow {
-  /* eyebrow already styled globally; just make sure spacing works */
-  margin-bottom: 0.6rem;
+.outfit-hero h1 {
+  margin: 0 0 0.85rem;
+  font-size: clamp(2.8rem, 8vw, 6.8rem);
+  line-height: 0.88;
+  letter-spacing: -0.07em;
 }
 
-.outfit-hero-inner h1 {
-  font-size: clamp(2.2rem, 5vw, 4rem);
-  line-height: 1;
-  margin: 0 0 0.75rem;
+.outfit-hero .eyebrow {
+  margin-bottom: 0.9rem;
 }
 
-.outfit-meta-line {
-  color: var(--muted);
-  font-size: 0.92rem;
-  margin: 0;
-}
-
+.outfit-meta-line,
 #shared-by {
   color: var(--muted);
-  font-size: 0.85rem;
-  margin: 0 0 0.4rem;
+  font-size: 0.92rem;
+  margin: 0.25rem 0 0;
 }
 
-/* Outfit cover image */
+/* ----------------------------------------------------------
+   Tagged photo + selected garment
+   ---------------------------------------------------------- */
+
+.outfit-kit-section {
+  width: min(calc(100% - 2rem), var(--max-width));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(22rem, 0.9fr);
+  gap: clamp(1.5rem, 5vw, 4.5rem);
+  align-items: start;
+  padding: 0 0 3rem;
+}
+
+.outfit-photo-card {
+  position: sticky;
+  top: 6.5rem;
+  min-width: 0;
+}
+
 .outfit-image-wrap {
-  flex-shrink: 0;
-  width: clamp(9rem, 18vw, 14rem);
-  aspect-ratio: 3 / 4;
-  border-radius: var(--radius-xl);
+  position: relative;
   overflow: hidden;
+  width: 100%;
+  border-radius: 26px;
   background: linear-gradient(135deg, var(--bg-strong), #d5e2d4);
-  box-shadow: var(--shadow);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 30px 80px rgba(17, 37, 53, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
 .outfit-image-wrap img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: auto;
+  object-fit: contain;
 }
 
-/* Placeholder shown when no outfit image */
 .outfit-image-placeholder {
-  width: 100%;
-  height: 100%;
+  min-height: 22rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -169,22 +163,149 @@
   color: var(--forest);
 }
 
+.photo-helper {
+  margin: 0.85rem 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+.photo-pin {
+  position: absolute;
+  left: calc(var(--pin-x) * 100%);
+  top: calc(var(--pin-y) * 100%);
+  width: 2.2rem;
+  height: 2.2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.photo-pin::before {
+  content: "";
+  position: absolute;
+  inset: 0.22rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.24);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  box-shadow: 0 0 0 0.42rem rgba(255, 255, 255, 0.14), 0 10px 24px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(10px);
+  transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+
+.photo-pin::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0.34rem;
+  height: 0.34rem;
+  border-radius: 50%;
+  background: #fff;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.24);
+}
+
+.photo-pin:hover::before,
+.photo-pin:focus-visible::before,
+.photo-pin.is-active::before {
+  transform: scale(1.18);
+  background: rgba(255, 255, 255, 0.34);
+  box-shadow: 0 0 0 0.58rem rgba(255, 255, 255, 0.18), 0 16px 32px rgba(0, 0, 0, 0.22);
+}
+
+.photo-pin:focus-visible {
+  outline: 3px solid rgba(78, 143, 203, 0.8);
+  outline-offset: 4px;
+}
+
+.selected-garment-panel {
+  min-width: 0;
+}
+
+.selected-garment-card {
+  display: grid;
+  gap: 1.15rem;
+}
+
+.selected-garment-media {
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.66);
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  box-shadow: 0 24px 70px rgba(17, 37, 53, 0.12);
+}
+
+.selected-garment-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: clamp(1rem, 4vw, 2.2rem);
+}
+
+.selected-garment-copy {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.selected-garment-copy h2 {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", "Avenir Next", sans-serif;
+  font-size: clamp(1.35rem, 3vw, 2.1rem);
+  line-height: 1.05;
+  letter-spacing: -0.055em;
+}
+
+.selected-garment-brand,
+.selected-garment-meta,
+.selected-garment-price {
+  margin: 0;
+}
+
+.selected-garment-brand,
+.selected-garment-meta {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.selected-garment-price {
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.selected-garment-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin-top: 0.2rem;
+}
+
+.selected-garment-actions .button {
+  min-height: 2.55rem;
+  padding: 0 1rem;
+}
+
 /* ----------------------------------------------------------
-   Garments section
+   Garment list
    ---------------------------------------------------------- */
 
 .outfit-garments-section {
   width: min(calc(100% - 2rem), var(--max-width));
   margin: 0 auto;
-  padding: 2.5rem 0 2rem;
+  padding: 1rem 0 2.5rem;
 }
 
 .garments-heading {
   font-family: "Instrument Serif", Georgia, serif;
   font-weight: 400;
-  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-size: clamp(1.7rem, 3vw, 2.35rem);
   letter-spacing: -0.02em;
-  margin: 0 0 1.5rem;
+  margin: 0 0 1.25rem;
 }
 
 .garment-list {
@@ -193,42 +314,62 @@
   margin: 0;
   display: grid;
   gap: 0.85rem;
-  /* Two-column grid on wider screens; single column on mobile */
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-/* Individual garment card */
 .garment-card {
+  min-width: 0;
+}
+
+.garment-card-button {
+  width: 100%;
   display: grid;
   grid-template-columns: 5rem 1fr;
   gap: 1rem;
   align-items: flex-start;
   padding: 1rem;
-  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 22px;
   background: var(--surface);
   backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.75);
   box-shadow: 0 8px 24px rgba(17, 37, 53, 0.08);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
 }
 
-/* Garment thumbnail */
+.garment-card-button:hover,
+.garment-card-button:focus-visible,
+.garment-card.is-active .garment-card-button {
+  transform: translateY(-2px);
+  border-color: rgba(39, 79, 74, 0.28);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 16px 34px rgba(17, 37, 53, 0.12);
+}
+
+.garment-card-button:focus-visible {
+  outline: 3px solid rgba(78, 143, 203, 0.55);
+  outline-offset: 3px;
+}
+
 .garment-card-thumb {
   width: 5rem;
   height: 5rem;
-  border-radius: var(--radius-sm);
+  border-radius: 16px;
   overflow: hidden;
   background: linear-gradient(135deg, var(--bg-strong), #d3dfd2);
-  flex-shrink: 0;
   border: 1px solid rgba(255, 255, 255, 0.65);
 }
 
 .garment-card-thumb img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  padding: 0.35rem;
 }
 
-/* Placeholder when garment has no image */
 .garment-thumb-placeholder {
   width: 100%;
   height: 100%;
@@ -243,64 +384,58 @@
   color: var(--forest);
 }
 
-/* Garment text block */
 .garment-card-body {
   min-width: 0;
 }
 
 .garment-card-name {
   margin: 0 0 0.2rem;
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.2;
-  /* prevent long names from breaking layout */
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.16;
   overflow-wrap: break-word;
 }
 
 .garment-card-brand {
   margin: 0 0 0.55rem;
-  font-size: 0.85rem;
+  font-size: 0.84rem;
   color: var(--muted);
 }
 
-.garment-card-meta {
+.garment-card-meta,
+.garment-badges {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
   margin: 0 0 0.55rem;
 }
 
-/* Category / subcategory / color pill */
-.garment-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.3rem 0.6rem;
-  border-radius: 999px;
-  background: rgba(19, 32, 45, 0.06);
-  color: var(--muted);
-  font-size: 0.76rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-}
-
-/* Weather property badges */
 .garment-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
+  margin-bottom: 0;
 }
 
+.garment-pill,
 .badge {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  padding: 0.3rem 0.65rem;
   border-radius: 999px;
+  white-space: nowrap;
+}
+
+.garment-pill {
+  padding: 0.3rem 0.6rem;
+  background: rgba(19, 32, 45, 0.06);
+  color: var(--muted);
   font-size: 0.74rem;
-  font-weight: 700;
+  font-weight: 650;
+}
+
+.badge {
+  padding: 0.3rem 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -315,14 +450,13 @@
   color: var(--forest);
 }
 
-/* Insulation levels get a warm amber tint */
 .badge-insulation {
   background: rgba(243, 201, 125, 0.3);
   color: #7a5620;
 }
 
 /* ----------------------------------------------------------
-   CTA section at the bottom
+   CTA
    ---------------------------------------------------------- */
 
 .outfit-cta-section {
@@ -379,17 +513,40 @@
 }
 
 /* ----------------------------------------------------------
-   Responsive breakpoints
+   Responsive
    ---------------------------------------------------------- */
 
-@media (max-width: 860px) {
-  .garment-list {
+@media (max-width: 980px) {
+  .outfit-kit-section {
     grid-template-columns: 1fr;
   }
 
+  .outfit-photo-card {
+    position: static;
+  }
+
+  .selected-garment-card {
+    grid-template-columns: 12rem 1fr;
+    align-items: center;
+  }
+
+  .garment-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .outfit-hero {
+    padding-top: 3rem;
+  }
+
+  .selected-garment-card {
+    grid-template-columns: 1fr;
+  }
+
+  .garment-list,
   .outfit-cta-card {
     grid-template-columns: 1fr;
-    text-align: left;
   }
 
   .outfit-cta-art {
@@ -398,21 +555,12 @@
 }
 
 @media (max-width: 640px) {
-  .outfit-hero {
-    /* Stack image below copy on small phones */
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+  .outfit-header-cta {
+    display: none;
   }
 
   .outfit-image-wrap {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    max-height: 18rem;
-    object-fit: cover;
-  }
-
-  .outfit-header-cta {
-    display: none; /* hide header CTA on very small screens; bottom CTA remains */
+    border-radius: 22px;
   }
 
   .outfit-footer {
@@ -421,7 +569,7 @@
 }
 
 @media (max-width: 520px) {
-  .garment-card {
+  .garment-card-button {
     grid-template-columns: 4rem 1fr;
   }
 

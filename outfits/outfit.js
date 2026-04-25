@@ -2,39 +2,25 @@
  * outfit.js — Shared Outfit page controller
  *
  * URL format: traillayers.app/outfits/?id=<uuid>
- *
- * Reads ?id from the query string, fetches outfit data from the
- * Supabase Edge Function, then renders the result into the DOM.
- *
- * Configuration:
- *   SUPABASE_URL  — set this to your project's Supabase URL before deploy.
- *   APP_STORE_URL — set to the App Store link once the app is live.
  */
 
-// ----------------------------------------------------------------
-// Configuration — update before deploying
-// ----------------------------------------------------------------
-
 const SUPABASE_URL = "https://aumkrmgkdhnkkjdwzvdp.supabase.co";
-const CDN_BASE     = "https://cdn.traillayers.app";
-const APP_STORE_URL = "https://tally.so/r/rjLxAN"; // Replace with App Store URL when live
+const CDN_BASE = "https://cdn.traillayers.app";
+const APP_STORE_URL = "https://tally.so/r/rjLxAN";
 
-// ----------------------------------------------------------------
-// Helpers
-// ----------------------------------------------------------------
+let currentGarments = [];
+let currentPins = [];
+let selectedGarmentID = null;
 
-/** Return the ?id= query param value, or null. */
 function getToken() {
   const params = new URLSearchParams(window.location.search);
   return params.get("id") ?? null;
 }
 
-/** Build the Edge Function URL for a given token. */
 function edgeFunctionUrl(token) {
   return `${SUPABASE_URL}/functions/v1/get-shared-outfit?token=${encodeURIComponent(token)}`;
 }
 
-/** Swap which top-level state panel is visible. */
 function showState(id) {
   const ids = ["state-loading", "state-error", "state-content"];
   const main = document.getElementById("outfit-main");
@@ -51,19 +37,14 @@ function showState(id) {
     const isActive = panelId === id;
     el.hidden = !isActive;
 
-    if (panelId === id) {
-      if (panelId === "state-loading") {
-        el.setAttribute("aria-busy", "true");
-      } else {
-        el.removeAttribute("aria-busy");
-      }
+    if (isActive && panelId === "state-loading") {
+      el.setAttribute("aria-busy", "true");
     } else {
       el.removeAttribute("aria-busy");
     }
   });
 }
 
-/** Format an ISO date string as a readable date (e.g. "April 14, 2026"). */
 function formatDate(iso) {
   try {
     return new Date(iso).toLocaleDateString("en-US", {
@@ -76,16 +57,26 @@ function formatDate(iso) {
   }
 }
 
-/** Capitalise the first letter of a string. */
-function titleCase(str) {
-  if (!str) return "";
-  return str.charAt(0).toUpperCase() + str.slice(1);
+function formatPrice(price) {
+  if (price === null || price === undefined || price === "") return "";
+  const value = Number(price);
+  if (Number.isNaN(value)) return String(price);
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: value % 1 === 0 ? 0 : 2,
+  }).format(value);
 }
 
-/**
- * Map an insulation level string from the API to a human-readable label.
- * The iOS app stores values like "light", "medium", "heavy", "none".
- */
+function titleCase(str) {
+  if (!str) return "";
+  return String(str)
+    .split(/[\s_-]+/)
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+}
+
 function insulationLabel(level) {
   const map = {
     none: "Uninsulated",
@@ -98,20 +89,12 @@ function insulationLabel(level) {
   return map[level?.toLowerCase()] ?? titleCase(level);
 }
 
-// ----------------------------------------------------------------
-// DOM renderers
-// ----------------------------------------------------------------
-
-/**
- * Build and inject the SVG icon used as a placeholder in image slots.
- * @param {string} ariaLabel
- */
 function placeholderIconHTML(ariaLabel) {
   return `
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
          stroke="currentColor" stroke-width="1.4"
          stroke-linecap="round" stroke-linejoin="round"
-         role="img" aria-label="${ariaLabel}">
+         role="img" aria-label="${escapeHtml(ariaLabel)}">
       <rect x="3" y="3" width="18" height="18" rx="3"/>
       <circle cx="8.5" cy="8.5" r="1.5"/>
       <polyline points="21 15 16 10 5 21"/>
@@ -119,25 +102,32 @@ function placeholderIconHTML(ariaLabel) {
   `;
 }
 
-/** Render the outfit hero section (name, activity, image). */
+function escapeHtml(str) {
+  return String(str ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function garmentImageURL(garment) {
+  return garment?.imagePath ? `${CDN_BASE}/garments/${garment.imagePath}` : null;
+}
+
 function renderHero(outfit, sharedBy) {
-  // Activity eyebrow
   const activityEl = document.getElementById("outfit-activity");
   if (activityEl) {
     activityEl.textContent = outfit.intendedActivityType
       ? titleCase(outfit.intendedActivityType)
-      : "Outfit";
+      : "Shared Kit";
   }
 
-  // Outfit name
   const nameEl = document.getElementById("outfit-name");
   if (nameEl) {
     nameEl.textContent = outfit.name || "Untitled Outfit";
-    // Also update page <title>
     document.title = `${outfit.name || "Outfit"} — TrailLayers`;
   }
 
-  // Attribution
   const sharedByEl = document.getElementById("shared-by");
   if (sharedByEl) {
     if (sharedBy) {
@@ -148,77 +138,73 @@ function renderHero(outfit, sharedBy) {
     }
   }
 
-  // Date line
   const dateEl = document.getElementById("outfit-date");
   if (dateEl && outfit.createdAt) {
     dateEl.textContent = `Saved ${formatDate(outfit.createdAt)}`;
   }
+}
 
-  // Outfit image
+function renderOutfitPhoto(outfit, pins) {
   const imageWrap = document.getElementById("outfit-image-wrap");
-  if (imageWrap) {
-    if (outfit.imagePath) {
-      const img = document.createElement("img");
-      img.src = `${CDN_BASE}/outfits/${outfit.imagePath}`;
-      img.alt = `${outfit.name || "Outfit"} cover photo`;
-      img.loading = "eager"; // hero image — load immediately
-      img.decoding = "async";
-      imageWrap.appendChild(img);
-    } else {
-      const placeholder = document.createElement("div");
-      placeholder.className = "outfit-image-placeholder";
-      placeholder.innerHTML = `
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
-             stroke="currentColor" stroke-width="1.4"
-             stroke-linecap="round" stroke-linejoin="round"
-             aria-hidden="true">
-          <path d="M4 5a1 1 0 0 1 1-1h4l2 3h8a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5z"/>
-          <circle cx="10" cy="12" r="2"/>
-          <path d="m20 18-4-4-2 2-2-2-4 4"/>
-        </svg>
-      `;
-      imageWrap.appendChild(placeholder);
-    }
+  const helper = document.getElementById("photo-helper");
+  if (!imageWrap) return;
+
+  imageWrap.replaceChildren();
+
+  if (outfit.imagePath) {
+    const img = document.createElement("img");
+    img.src = `${CDN_BASE}/outfits/${outfit.imagePath}`;
+    img.alt = `${outfit.name || "Outfit"} tagged photo`;
+    img.loading = "eager";
+    img.decoding = "async";
+    imageWrap.appendChild(img);
+  } else {
+    const placeholder = document.createElement("div");
+    placeholder.className = "outfit-image-placeholder";
+    placeholder.innerHTML = `
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="1.4"
+           stroke-linecap="round" stroke-linejoin="round"
+           aria-hidden="true">
+        <path d="M4 5a1 1 0 0 1 1-1h4l2 3h8a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5z"/>
+        <circle cx="10" cy="12" r="2"/>
+        <path d="m20 18-4-4-2 2-2-2-4 4"/>
+      </svg>
+    `;
+    imageWrap.appendChild(placeholder);
+  }
+
+  const usablePins = pins.filter((pin) => pin.garmentID && pin.x !== null && pin.y !== null);
+  usablePins.forEach((pin) => {
+    const marker = document.createElement("button");
+    marker.type = "button";
+    marker.className = "photo-pin";
+    marker.style.setProperty("--pin-x", Number(pin.x));
+    marker.style.setProperty("--pin-y", Number(pin.y));
+    marker.dataset.garmentId = pin.garmentID;
+    marker.setAttribute("aria-label", `Show ${garmentName(pin.garmentID)}`);
+    marker.addEventListener("click", () => selectGarment(pin.garmentID, { scroll: false }));
+    imageWrap.appendChild(marker);
+  });
+
+  if (helper) {
+    helper.hidden = usablePins.length === 0;
   }
 }
 
-/** Build a single garment card element. */
-function buildGarmentCard(garment) {
-  const li = document.createElement("li");
-  li.className = "garment-card";
+function garmentName(id) {
+  return currentGarments.find((garment) => garment.id === id)?.name || "garment";
+}
 
-  // Thumbnail
-  const thumbDiv = document.createElement("div");
-  thumbDiv.className = "garment-card-thumb";
-  if (garment.imagePath) {
-    const img = document.createElement("img");
-    img.src = `${CDN_BASE}/garments/${garment.imagePath}`;
-    img.alt = garment.name || "Garment photo";
-    img.loading = "lazy";
-    img.decoding = "async";
-    thumbDiv.appendChild(img);
-  } else {
-    const placeholder = document.createElement("div");
-    placeholder.className = "garment-thumb-placeholder";
-    placeholder.innerHTML = placeholderIconHTML(garment.name || "Garment");
-    thumbDiv.appendChild(placeholder);
-  }
+function buildMetaLine(garment) {
+  return [
+    garment.brand,
+    titleCase(garment.category),
+    titleCase(garment.subcategory),
+  ].filter(Boolean).join(" · ");
+}
 
-  // Body
-  const bodyDiv = document.createElement("div");
-  bodyDiv.className = "garment-card-body";
-
-  // Name
-  const nameEl = document.createElement("h3");
-  nameEl.className = "garment-card-name";
-  nameEl.textContent = garment.name || "Unnamed garment";
-
-  // Brand
-  const brandEl = document.createElement("p");
-  brandEl.className = "garment-card-brand";
-  brandEl.textContent = garment.brand || "";
-
-  // Category / subcategory / color pills
+function buildPills(garment) {
   const metaDiv = document.createElement("div");
   metaDiv.className = "garment-card-meta";
   const pills = [
@@ -227,6 +213,7 @@ function buildGarmentCard(garment) {
     garment.color,
     garment.material,
   ].filter(Boolean);
+
   pills.forEach((text) => {
     const pill = document.createElement("span");
     pill.className = "garment-pill";
@@ -234,7 +221,10 @@ function buildGarmentCard(garment) {
     metaDiv.appendChild(pill);
   });
 
-  // Weather property badges
+  return metaDiv;
+}
+
+function buildBadges(garment) {
   const badgesDiv = document.createElement("div");
   badgesDiv.className = "garment-badges";
 
@@ -286,18 +276,152 @@ function buildGarmentCard(garment) {
     badgesDiv.appendChild(badge);
   }
 
-  // Assemble
+  return badgesDiv;
+}
+
+function renderSelectedGarment(garment) {
+  const panel = document.getElementById("selected-garment-panel");
+  if (!panel) return;
+
+  panel.replaceChildren();
+
+  if (!garment) {
+    const empty = document.createElement("div");
+    empty.className = "selected-garment-card";
+    empty.innerHTML = `
+      <div class="selected-garment-copy">
+        <p class="eyebrow">Selected garment</p>
+        <h2>No garments listed</h2>
+        <p class="selected-garment-meta">This shared outfit does not include garment details yet.</p>
+      </div>
+    `;
+    panel.appendChild(empty);
+    return;
+  }
+
+  const card = document.createElement("article");
+  card.className = "selected-garment-card";
+
+  const media = document.createElement("div");
+  media.className = "selected-garment-media";
+  const imageURL = garmentImageURL(garment);
+  if (imageURL) {
+    const img = document.createElement("img");
+    img.src = imageURL;
+    img.alt = garment.name || "Selected garment";
+    img.loading = "eager";
+    img.decoding = "async";
+    media.appendChild(img);
+  } else {
+    const placeholder = document.createElement("div");
+    placeholder.className = "garment-thumb-placeholder";
+    placeholder.innerHTML = placeholderIconHTML(garment.name || "Selected garment");
+    media.appendChild(placeholder);
+  }
+
+  const copy = document.createElement("div");
+  copy.className = "selected-garment-copy";
+
+  const eyebrow = document.createElement("p");
+  eyebrow.className = "eyebrow";
+  eyebrow.textContent = "Selected garment";
+
+  const title = document.createElement("h2");
+  title.textContent = garment.name || "Unnamed garment";
+
+  const brand = document.createElement("p");
+  brand.className = "selected-garment-brand";
+  brand.textContent = garment.brand || garment.retailer || "";
+
+  const meta = document.createElement("p");
+  meta.className = "selected-garment-meta";
+  meta.textContent = buildMetaLine(garment);
+
+  const price = document.createElement("p");
+  price.className = "selected-garment-price";
+  price.textContent = formatPrice(garment.price);
+
+  const actions = document.createElement("div");
+  actions.className = "selected-garment-actions";
+
+  if (garment.productURL) {
+    const link = document.createElement("a");
+    link.className = "button button-primary";
+    link.href = garment.productURL;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = garment.retailer ? `View at ${garment.retailer}` : "View product";
+    actions.appendChild(link);
+  }
+
+  copy.appendChild(eyebrow);
+  copy.appendChild(title);
+  if (brand.textContent) copy.appendChild(brand);
+  if (meta.textContent) copy.appendChild(meta);
+  if (price.textContent) copy.appendChild(price);
+
+  const badges = buildBadges(garment);
+  if (badges.children.length) copy.appendChild(badges);
+  if (actions.children.length) copy.appendChild(actions);
+
+  card.appendChild(media);
+  card.appendChild(copy);
+  panel.appendChild(card);
+}
+
+function buildGarmentCard(garment) {
+  const li = document.createElement("li");
+  li.className = "garment-card";
+  li.dataset.garmentId = garment.id;
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "garment-card-button";
+  button.addEventListener("click", () => selectGarment(garment.id, { scroll: true }));
+
+  const thumbDiv = document.createElement("div");
+  thumbDiv.className = "garment-card-thumb";
+  const imageURL = garmentImageURL(garment);
+  if (imageURL) {
+    const img = document.createElement("img");
+    img.src = imageURL;
+    img.alt = garment.name || "Garment photo";
+    img.loading = "lazy";
+    img.decoding = "async";
+    thumbDiv.appendChild(img);
+  } else {
+    const placeholder = document.createElement("div");
+    placeholder.className = "garment-thumb-placeholder";
+    placeholder.innerHTML = placeholderIconHTML(garment.name || "Garment");
+    thumbDiv.appendChild(placeholder);
+  }
+
+  const bodyDiv = document.createElement("div");
+  bodyDiv.className = "garment-card-body";
+
+  const nameEl = document.createElement("h3");
+  nameEl.className = "garment-card-name";
+  nameEl.textContent = garment.name || "Unnamed garment";
+
+  const brandEl = document.createElement("p");
+  brandEl.className = "garment-card-brand";
+  brandEl.textContent = garment.brand || "";
+
   bodyDiv.appendChild(nameEl);
   if (garment.brand) bodyDiv.appendChild(brandEl);
-  if (pills.length) bodyDiv.appendChild(metaDiv);
-  if (badgesDiv.children.length) bodyDiv.appendChild(badgesDiv);
 
-  li.appendChild(thumbDiv);
-  li.appendChild(bodyDiv);
+  const pills = buildPills(garment);
+  if (pills.children.length) bodyDiv.appendChild(pills);
+
+  const badges = buildBadges(garment);
+  if (badges.children.length) bodyDiv.appendChild(badges);
+
+  button.appendChild(thumbDiv);
+  button.appendChild(bodyDiv);
+  li.appendChild(button);
   return li;
 }
 
-/** Sort garments by category: outerwear → top → bottom → footwear → accessory → other. */
 function sortGarments(garments) {
   const order = ["outerwear", "top", "bottom", "footwear", "accessory"];
   return [...garments].sort((a, b) => {
@@ -305,14 +429,15 @@ function sortGarments(garments) {
     const bi = order.indexOf(b.category?.toLowerCase() ?? "");
     const an = ai === -1 ? order.length : ai;
     const bn = bi === -1 ? order.length : bi;
-    return an - bn;
+    return an - bn || String(a.name ?? "").localeCompare(String(b.name ?? ""));
   });
 }
 
-/** Render all garment cards into the list. */
 function renderGarments(garments) {
   const list = document.getElementById("garment-list");
   if (!list) return;
+
+  list.replaceChildren();
 
   if (!garments || garments.length === 0) {
     const empty = document.createElement("li");
@@ -324,10 +449,41 @@ function renderGarments(garments) {
     return;
   }
 
-  sortGarments(garments).forEach((g) => list.appendChild(buildGarmentCard(g)));
+  sortGarments(garments).forEach((garment) => list.appendChild(buildGarmentCard(garment)));
 }
 
-/** Wire up all App Store CTA links. */
+function selectGarment(garmentID, options = {}) {
+  const garment = currentGarments.find((item) => item.id === garmentID) ?? currentGarments[0] ?? null;
+  selectedGarmentID = garment?.id ?? null;
+
+  renderSelectedGarment(garment);
+  syncSelectionState();
+
+  if (options.scroll) {
+    document.getElementById("selected-garment-panel")?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+    });
+  }
+}
+
+function syncSelectionState() {
+  document.querySelectorAll(".photo-pin").forEach((pin) => {
+    pin.classList.toggle("is-active", pin.dataset.garmentId === selectedGarmentID);
+  });
+
+  document.querySelectorAll(".garment-card").forEach((card) => {
+    card.classList.toggle("is-active", card.dataset.garmentId === selectedGarmentID);
+  });
+}
+
+function pickInitialGarmentID(garments, pins) {
+  const firstPinnedGarmentID = pins.find((pin) =>
+    garments.some((garment) => garment.id === pin.garmentID)
+  )?.garmentID;
+  return firstPinnedGarmentID ?? garments[0]?.id ?? null;
+}
+
 function setAppStoreCTAs(url) {
   document
     .querySelectorAll('[id^="appstore-cta"]')
@@ -340,24 +496,15 @@ function setAppStoreCTAs(url) {
     });
 }
 
-// ----------------------------------------------------------------
-// Data fetching
-// ----------------------------------------------------------------
-
 async function fetchOutfit(token) {
-  const url = edgeFunctionUrl(token);
-  // The Edge Function is public — no auth header needed.
-  const res = await fetch(url, {
+  const res = await fetch(edgeFunctionUrl(token), {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   });
 
-  if (res.status === 404) {
-    return null; // token not found or expired
-  }
+  if (res.status === 404) return null;
 
   if (!res.ok) {
-    // Surface any unexpected server error
     const body = await res.text().catch(() => "");
     throw new Error(`Edge function returned ${res.status}: ${body}`);
   }
@@ -365,26 +512,16 @@ async function fetchOutfit(token) {
   return res.json();
 }
 
-// ----------------------------------------------------------------
-// Boot
-// ----------------------------------------------------------------
-
 async function init() {
-  // All three panels start with hidden in the HTML. Reveal loading first
-  // so there is no flash of empty content while the fetch runs.
   showState("state-loading");
 
-  // Set the copyright year
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // Wire up App Store links with the known (or placeholder) URL
   setAppStoreCTAs(APP_STORE_URL);
 
   const token = getToken();
-
   if (!token) {
-    // No token in URL — show error immediately
     showState("state-error");
     return;
   }
@@ -397,18 +534,22 @@ async function init() {
       return;
     }
 
-    renderHero(data.outfit, data.sharedBy ?? null);
-    renderGarments(data.garments ?? []);
-    showState("state-content");
+    currentGarments = sortGarments(data.garments ?? []);
+    currentPins = data.pins ?? [];
+    selectedGarmentID = pickInitialGarmentID(currentGarments, currentPins);
 
+    renderHero(data.outfit, data.sharedBy ?? null);
+    renderOutfitPhoto(data.outfit, currentPins);
+    renderGarments(currentGarments);
+    renderSelectedGarment(currentGarments.find((g) => g.id === selectedGarmentID) ?? currentGarments[0] ?? null);
+    syncSelectionState();
+    showState("state-content");
   } catch (err) {
     console.error("[TrailLayers] Failed to load outfit:", err);
     showState("state-error");
   }
 }
 
-// Run after DOM is ready (this file is loaded as a module, so
-// it is deferred by default — but guard anyway for clarity).
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", init);
 } else {
