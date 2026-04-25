@@ -1,0 +1,296 @@
+/* =========================================================
+   Profile page — scoped styles
+   Depends on styles.css for tokens + base
+   ========================================================= */
+
+.profile-footer {
+  width: min(calc(100% - 2rem), var(--max-width));
+  margin: 0 auto;
+}
+
+.profile-header-cta {
+  min-height: 2.4rem;
+  padding: 0 1rem;
+  font-size: 0.88rem;
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------------------
+   Profile main layout
+   ---------------------------------------------------------- */
+
+.profile-main {
+  width: min(calc(100% - 2rem), var(--max-width));
+  margin: 0 auto;
+}
+
+/* ----------------------------------------------------------
+   Profile hero
+   ---------------------------------------------------------- */
+
+.profile-hero {
+  padding: 3rem 0 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.profile-hero-inner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.profile-avatar {
+  flex-shrink: 0;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--forest), var(--pine));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  box-shadow: 0 8px 24px rgba(39, 79, 74, 0.3);
+}
+
+.profile-name {
+  margin: 0 0 0.2rem;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.profile-username {
+  margin: 0 0 0.3rem;
+  font-size: 0.95rem;
+  color: var(--forest);
+  font-weight: 600;
+}
+
+.profile-joined {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Stats row */
+.profile-stats {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 8px 24px rgba(17, 37, 53, 0.06);
+  width: fit-content;
+}
+
+.profile-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.profile-stat-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.profile-stat-label {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.profile-stat-divider {
+  width: 1px;
+  height: 2.4rem;
+  background: var(--line);
+  flex-shrink: 0;
+}
+
+/* ----------------------------------------------------------
+   Outfits section
+   ---------------------------------------------------------- */
+
+.profile-outfits-section {
+  padding: 0.5rem 0 2rem;
+}
+
+.profile-section-heading {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  letter-spacing: -0.02em;
+  margin: 0 0 1.5rem;
+}
+
+.profile-outfit-grid {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+/* Outfit card */
+.profile-outfit-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 8px 24px rgba(17, 37, 53, 0.08);
+  overflow: hidden;
+}
+
+/* Cover image area */
+.profile-outfit-thumb {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--bg-strong), #c8d9c6);
+}
+
+.profile-outfit-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-outfit-thumb--placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #dce9da, #c5d8c2);
+  color: var(--forest);
+  opacity: 0.9;
+}
+
+.profile-outfit-thumb--placeholder svg {
+  opacity: 0.35;
+}
+
+/* Card body */
+.profile-outfit-body {
+  padding: 1rem 1.1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.profile-outfit-activity {
+  margin: 0 0 0.2rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--forest);
+}
+
+.profile-outfit-name {
+  margin: 0 0 0.4rem;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.profile-outfit-meta {
+  margin: 0 0 0.9rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.profile-outfit-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--forest);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s ease, opacity 0.15s ease;
+  margin-top: auto;
+}
+
+.profile-outfit-link:hover {
+  border-bottom-color: var(--forest);
+  opacity: 0.8;
+}
+
+/* ----------------------------------------------------------
+   CTA section (reuse outfit page styles)
+   ---------------------------------------------------------- */
+
+.outfit-cta-section {
+  width: 100%;
+  margin: 0.5rem 0 3rem;
+}
+
+/* ----------------------------------------------------------
+   Responsive
+   ---------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  .profile-outfit-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .profile-stats {
+    width: 100%;
+    justify-content: space-around;
+  }
+}
+
+@media (max-width: 640px) {
+  .profile-outfit-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-outfit-card {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .profile-outfit-thumb {
+    width: 7rem;
+    flex-shrink: 0;
+    aspect-ratio: unset;
+  }
+
+  .profile-header-cta {
+    display: none;
+  }
+
+  .profile-footer {
+    width: min(calc(100% - 1rem), var(--max-width));
+  }
+}
+
+@media (max-width: 420px) {
+  .profile-stats {
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .profile-stat-value {
+    font-size: 1.3rem;
+  }
+}
