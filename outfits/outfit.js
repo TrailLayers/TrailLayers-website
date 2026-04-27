@@ -6,7 +6,7 @@
 
 const SUPABASE_URL = "https://aumkrmgkdhnkkjdwzvdp.supabase.co";
 const CDN_BASE = "https://cdn.traillayers.app";
-const APP_STORE_URL = "https://tally.so/r/rjLxAN";
+const APP_STORE_URL = "https://tally.so/r/9q6ayX";
 
 let currentGarments = [];
 let currentPins = [];
