@@ -15,6 +15,9 @@
   white-space: nowrap;
 }
 
+/* Prevent display rules from overriding the hidden attribute */
+[hidden] { display: none !important; }
+
 /* ----------------------------------------------------------
    Loading / error states
    ---------------------------------------------------------- */
@@ -258,6 +261,10 @@
   color: var(--muted);
 }
 
+.profile-outfit-card {
+  position: relative;
+}
+
 .profile-outfit-link {
   display: inline-flex;
   align-items: center;
@@ -271,18 +278,72 @@
   margin-top: auto;
 }
 
+.profile-outfit-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
 .profile-outfit-link:hover {
   border-bottom-color: var(--forest);
   opacity: 0.8;
 }
 
 /* ----------------------------------------------------------
-   CTA section (reuse outfit page styles)
+   CTA section
    ---------------------------------------------------------- */
 
 .outfit-cta-section {
   width: 100%;
   margin: 0.5rem 0 3rem;
+}
+
+.outfit-cta-card {
+  display: grid;
+  grid-template-columns: 1fr 10rem;
+  gap: 2rem;
+  align-items: center;
+  padding: 2rem 2rem 2rem 2.2rem;
+  border-radius: var(--radius-xl);
+  background:
+    linear-gradient(135deg, rgba(39, 79, 74, 0.12), rgba(29, 58, 89, 0.1)),
+    var(--surface);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: var(--shadow);
+}
+
+.outfit-cta-copy .eyebrow {
+  margin-bottom: 0.5rem;
+}
+
+.outfit-cta-heading {
+  font-family: "Instrument Serif", Georgia, serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  margin: 0 0 0.75rem;
+  line-height: 1.1;
+}
+
+.outfit-cta-copy p {
+  color: var(--muted);
+  line-height: 1.65;
+  margin: 0 0 1.5rem;
+  max-width: 38rem;
+}
+
+.outfit-cta-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.outfit-cta-art img {
+  width: 8rem;
+  height: 8rem;
+  border-radius: 2rem;
+  box-shadow: 0 16px 30px rgba(29, 58, 89, 0.14);
 }
 
 /* ----------------------------------------------------------
@@ -297,6 +358,16 @@
   .profile-stats {
     width: 100%;
     justify-content: space-around;
+  }
+}
+
+@media (max-width: 720px) {
+  .outfit-cta-card {
+    grid-template-columns: 1fr;
+  }
+
+  .outfit-cta-art {
+    display: none;
   }
 }
 

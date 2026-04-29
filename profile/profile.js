@@ -7,7 +7,8 @@
 import { SUPABASE_URL, CDN_BASE, APP_STORE_URL } from "../shared/constants.js";
 
 function getUsername() {
-  return new URLSearchParams(window.location.search).get("u") ?? null;
+  const u = new URLSearchParams(window.location.search).get("u");
+  return u ? u.toLowerCase() : null;
 }
 
 function edgeFunctionUrl(username) {
