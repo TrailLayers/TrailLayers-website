@@ -16,6 +16,47 @@
 }
 
 /* ----------------------------------------------------------
+   Loading / error states
+   ---------------------------------------------------------- */
+
+.profile-state-loading {
+  display: flex;
+  justify-content: center;
+  padding: 6rem 0;
+}
+
+.profile-state-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 2.5px solid var(--line);
+  border-top-color: var(--forest);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.profile-state-message {
+  padding: 6rem 0 4rem;
+  text-align: center;
+}
+
+.profile-state-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.profile-state-sub {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------
    Profile main layout
    ---------------------------------------------------------- */
 

@@ -4,9 +4,7 @@
  * URL format: traillayers.app/outfits/?id=<uuid>
  */
 
-const SUPABASE_URL = "https://aumkrmgkdhnkkjdwzvdp.supabase.co";
-const CDN_BASE = "https://cdn.traillayers.app";
-const APP_STORE_URL = "https://tally.so/r/9q6ayX";
+import { SUPABASE_URL, CDN_BASE, APP_STORE_URL } from "../shared/constants.js";
 
 let currentGarments = [];
 let currentPins = [];
@@ -114,7 +112,7 @@ function garmentImageURL(garment) {
   return garment?.imagePath ? `${CDN_BASE}/garments/${garment.imagePath}` : null;
 }
 
-function renderHero(outfit, sharedBy) {
+function renderHero(outfit, sharedBy, sharedByUsername) {
   const activityEl = document.getElementById("outfit-activity");
   if (activityEl) {
     activityEl.textContent = outfit.intendedActivityType
@@ -131,7 +129,11 @@ function renderHero(outfit, sharedBy) {
   const sharedByEl = document.getElementById("shared-by");
   if (sharedByEl) {
     if (sharedBy) {
-      sharedByEl.textContent = `Shared by ${sharedBy}`;
+      if (sharedByUsername) {
+        sharedByEl.innerHTML = `Shared by <a href="/profile/?u=${encodeURIComponent(sharedByUsername)}" class="shared-by-link">${escapeHtml(sharedBy)}</a>`;
+      } else {
+        sharedByEl.textContent = `Shared by ${sharedBy}`;
+      }
       sharedByEl.hidden = false;
     } else {
       sharedByEl.hidden = true;
@@ -538,7 +540,7 @@ async function init() {
     currentPins = data.pins ?? [];
     selectedGarmentID = pickInitialGarmentID(currentGarments, currentPins);
 
-    renderHero(data.outfit, data.sharedBy ?? null);
+    renderHero(data.outfit, data.sharedBy ?? null, data.sharedByUsername ?? null);
     renderOutfitPhoto(data.outfit, currentPins);
     renderGarments(currentGarments);
     renderSelectedGarment(currentGarments.find((g) => g.id === selectedGarmentID) ?? currentGarments[0] ?? null);
