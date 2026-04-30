@@ -6,7 +6,8 @@
         "appIDs": ["DXH9W53CR3.com.antoniopelayo.traillayers"],
         "components": [
           { "/": "/auth/*" },
-          { "/": "/outfits/*" }
+          { "/": "/outfits/*" },
+          { "/": "/profile/*" }
         ]
       }
     ]
