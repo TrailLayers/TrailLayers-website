@@ -70,7 +70,7 @@ function avatarInitials(displayName, username) {
 }
 
 function renderProfile(data) {
-  const { profile, garmentCount, sharedOutfitCount } = data;
+  const { profile, garmentCount, sharedOutfitCount, activityCount } = data;
 
   const displayName = profile.displayName || profile.username || "TrailLayers User";
 
@@ -97,6 +97,9 @@ function renderProfile(data) {
 
   const outfitStatEl = document.getElementById("stat-outfits");
   if (outfitStatEl) outfitStatEl.textContent = sharedOutfitCount;
+
+  const activityStatEl = document.getElementById("stat-activities");
+  if (activityStatEl) activityStatEl.textContent = activityCount;
 }
 
 function buildOutfitCard(outfit) {
