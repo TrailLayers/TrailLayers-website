@@ -469,6 +469,145 @@
 }
 
 /* ----------------------------------------------------------
+   Temperature bar
+   ---------------------------------------------------------- */
+
+.outfit-weather-section {
+  width: min(calc(100% - 2rem), var(--max-width));
+  margin: 0 auto;
+  padding: 0 0 2.8rem;
+}
+
+.temp-bar-wrap {
+  padding: 1.4rem 1.6rem 1.25rem;
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: var(--shadow);
+}
+
+.temp-bar-eyebrow {
+  margin: 0 0 0.9rem;
+}
+
+/* Scale row: min-label | bar-area | max-label */
+.temp-bar-scale-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.temp-bar-scale-label {
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  color: var(--muted);
+  opacity: 0.65;
+  white-space: nowrap;
+  /* Fixed width keeps labels from shifting as the bar resizes — mirrors the
+     iOS "flangeWidth: 36" approach */
+  width: 2.5rem;
+}
+
+.temp-bar-scale-label:last-child {
+  text-align: right;
+}
+
+/* Bar area — contains the gradient track, overlay capsule, and tick marks */
+.temp-bar-area {
+  position: relative;
+  flex: 1;
+  height: 0.9rem; /* ~14pt, matching iOS frame height */
+}
+
+/* Full-width gradient track — blue (cold) → green (mid) → orange/red (warm) */
+.temp-bar-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    hsl(216deg 80% 72%),   /* hue 0.60 sat 0.8 bri 0.85 → cool blue */
+    hsl(180deg 70% 56%),   /* hue 0.50 sat 0.7 bri 0.80 → teal */
+    hsl(137deg 70% 45%),   /* hue 0.38 sat 0.7 bri 0.70 → forest green */
+    hsl(65deg 90% 72%),    /* hue 0.18 sat 0.9 bri 0.95 → yellow-green */
+    hsl(29deg 90% 72%),    /* hue 0.08 sat 0.9 bri 0.95 → warm orange */
+    hsl(7deg 90% 62%)      /* hue 0.02 sat 0.9 bri 0.85 → red-orange */
+  );
+}
+
+/* Frosted worn-range overlay capsule — white semi-transparent with white border */
+.temp-bar-overlay {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.28);
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+  /* min-width ensures a point range is still visible */
+  min-width: 0.6rem;
+  /* translateX(-50%) is set inline to center on the midpoint */
+}
+
+/* White tick marks at worn-range boundaries */
+.temp-bar-tick {
+  position: absolute;
+  top: -3px;
+  width: 2px;
+  height: calc(100% + 6px); /* extend slightly above and below the track */
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 1px;
+  transform: translateX(-50%);
+}
+
+/* Labels row anchored beneath the bar */
+.temp-bar-labels-row {
+  position: relative;
+  height: 1.4rem;
+  margin-top: 0.25rem;
+  /* account for the flanges on each side, matching .temp-bar-scale-label width
+     plus the gap so label percentages align with bar percentages */
+  margin-left: calc(2.5rem + 0.5rem);
+  margin-right: calc(2.5rem + 0.5rem);
+}
+
+.temp-bar-label {
+  position: absolute;
+  font-size: 0.78rem;
+  color: var(--muted);
+  white-space: nowrap;
+  transform: translateX(-50%);
+  line-height: 1.4rem;
+}
+
+/* Footer: wear count + condition icons */
+.temp-bar-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+}
+
+.temp-bar-wear-count {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.temp-bar-condition-icon {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.temp-bar-rain {
+  color: var(--pine);
+}
+
+.temp-bar-wind {
+  color: var(--muted);
+}
+
+/* ----------------------------------------------------------
    CTA
    ---------------------------------------------------------- */
 

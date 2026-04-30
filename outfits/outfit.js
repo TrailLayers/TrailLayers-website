@@ -281,6 +281,236 @@ function buildBadges(garment) {
   return badgesDiv;
 }
 
+// ----------------------------------------------------------
+// Temperature bar
+// ----------------------------------------------------------
+
+/**
+ * Full display scale in °F — matches iOS GarmentTemperatureBar exactly.
+ * @type {number}
+ */
+const TEMP_SCALE_MIN = -10;
+const TEMP_SCALE_MAX = 110;
+
+/**
+ * Converts a temperature value to a 0–1 fraction within the display scale.
+ * Clamps to the scale boundaries.
+ * @param {number} tempF
+ * @returns {number}
+ */
+function tempFraction(tempF) {
+  const clamped = Math.max(TEMP_SCALE_MIN, Math.min(TEMP_SCALE_MAX, tempF));
+  return (clamped - TEMP_SCALE_MIN) / (TEMP_SCALE_MAX - TEMP_SCALE_MIN);
+}
+
+/**
+ * Formats a °F value for display (integer, no decimals).
+ * @param {number} tempF
+ * @returns {string}
+ */
+function formatTempF(tempF) {
+  return `${Math.round(tempF)}°F`;
+}
+
+/**
+ * Derives the worn lo/hi range from weatherStats, handling the asymmetric-nil
+ * case the same way iOS OutfitTemperatureBarView does:
+ *   (lo, hi) → (lo, hi)
+ *   (lo, null) → point range at lo
+ *   (null, hi) → point range at hi
+ *   (null, null) → null (no temp data)
+ *
+ * @param {{ tempMin: number|null, tempMax: number|null }} stats
+ * @returns {{ lo: number, hi: number } | null}
+ */
+function wornRange(stats) {
+  const { tempMin, tempMax } = stats;
+  if (tempMin !== null && tempMax !== null) return { lo: tempMin, hi: tempMax };
+  if (tempMin !== null) return { lo: tempMin, hi: tempMin };
+  if (tempMax !== null) return { lo: tempMax, hi: tempMax };
+  return null;
+}
+
+/**
+ * Renders the temperature bar into #outfit-weather-section.
+ * Shows nothing when weatherStats is absent, wearCount is 0, or both
+ * tempMin and tempMax are null.
+ *
+ * @param {{ wearCount: number, tempMin: number|null, tempMax: number|null,
+ *           hadRain: boolean, hadWind: boolean } | null | undefined} weatherStats
+ */
+function renderWeatherBar(weatherStats) {
+  const section = document.getElementById("outfit-weather-section");
+  const container = document.getElementById("temp-bar-container");
+  if (!section || !container) return;
+
+  // Guard: nothing to show
+  if (
+    !weatherStats ||
+    weatherStats.wearCount <= 0 ||
+    (weatherStats.tempMin === null && weatherStats.tempMax === null)
+  ) {
+    section.hidden = true;
+    return;
+  }
+
+  const range = wornRange(weatherStats);
+  // range should always be non-null here given the guard above, but be safe
+  if (!range) {
+    section.hidden = true;
+    return;
+  }
+
+  const loFrac = tempFraction(range.lo);
+  const hiFrac = tempFraction(range.hi);
+  const isPointRange = range.lo === range.hi;
+
+  // The overlay capsule is centered on the midpoint between lo and hi ticks,
+  // same as the iOS implementation. We ensure a minimum visible width.
+  const overlayLeft = ((loFrac + hiFrac) / 2) * 100;
+  const overlayWidthPct = Math.max(hiFrac - loFrac, 0.04) * 100;
+
+  // ---- Build DOM ----
+
+  container.replaceChildren();
+
+  // Eyebrow label
+  const eyebrow = document.createElement("p");
+  eyebrow.className = "eyebrow temp-bar-eyebrow";
+  eyebrow.textContent = "Worn in";
+  container.appendChild(eyebrow);
+
+  // Scale row: min label | bar | max label
+  const scaleRow = document.createElement("div");
+  scaleRow.className = "temp-bar-scale-row";
+
+  const minLabel = document.createElement("span");
+  minLabel.className = "temp-bar-scale-label";
+  minLabel.textContent = formatTempF(TEMP_SCALE_MIN);
+  scaleRow.appendChild(minLabel);
+
+  // Bar area — gradient + overlay capsule + ticks
+  const barArea = document.createElement("div");
+  barArea.className = "temp-bar-area";
+
+  const track = document.createElement("div");
+  track.className = "temp-bar-track";
+  barArea.appendChild(track);
+
+  // Frosted worn-range overlay capsule
+  const overlay = document.createElement("div");
+  overlay.className = "temp-bar-overlay";
+  overlay.style.left = `${overlayLeft}%`;
+  overlay.style.width = `${overlayWidthPct}%`;
+  overlay.style.transform = "translateX(-50%)";
+  barArea.appendChild(overlay);
+
+  // Left boundary tick
+  const tickLo = document.createElement("div");
+  tickLo.className = "temp-bar-tick";
+  tickLo.style.left = `${loFrac * 100}%`;
+  barArea.appendChild(tickLo);
+
+  // Right boundary tick — omitted for a point range (matches iOS)
+  if (!isPointRange) {
+    const tickHi = document.createElement("div");
+    tickHi.className = "temp-bar-tick";
+    tickHi.style.left = `${hiFrac * 100}%`;
+    barArea.appendChild(tickHi);
+  }
+
+  scaleRow.appendChild(barArea);
+
+  const maxLabel = document.createElement("span");
+  maxLabel.className = "temp-bar-scale-label";
+  maxLabel.textContent = formatTempF(TEMP_SCALE_MAX);
+  scaleRow.appendChild(maxLabel);
+
+  container.appendChild(scaleRow);
+
+  // Worn-range labels below the bar, anchored to tick positions.
+  // The labels row is position:relative; labels are position:absolute
+  // left-aligned to the tick fraction, then shifted -50% to center on the tick.
+  // When the two labels would overlap (gap < 10% of bar width ≈ 52px equivalent),
+  // collapse to a single centered label — same logic as iOS.
+  const labelsRow = document.createElement("div");
+  labelsRow.className = "temp-bar-labels-row";
+  labelsRow.setAttribute("aria-hidden", "true"); // screen readers get the footer text
+
+  const GAP_COLLAPSE_THRESHOLD = 0.10; // fraction of scale width
+  const tooClose = !isPointRange && (hiFrac - loFrac) < GAP_COLLAPSE_THRESHOLD;
+
+  if (isPointRange || tooClose) {
+    const midFrac = (loFrac + hiFrac) / 2;
+    const lbl = document.createElement("span");
+    lbl.className = "temp-bar-label";
+    lbl.style.left = `${midFrac * 100}%`;
+    lbl.textContent = isPointRange
+      ? formatTempF(range.lo)
+      : `${formatTempF(range.lo)}–${formatTempF(range.hi)}`;
+    labelsRow.appendChild(lbl);
+  } else {
+    const lblLo = document.createElement("span");
+    lblLo.className = "temp-bar-label";
+    lblLo.style.left = `${loFrac * 100}%`;
+    lblLo.textContent = formatTempF(range.lo);
+    labelsRow.appendChild(lblLo);
+
+    const lblHi = document.createElement("span");
+    lblHi.className = "temp-bar-label";
+    lblHi.style.left = `${hiFrac * 100}%`;
+    lblHi.textContent = formatTempF(range.hi);
+    labelsRow.appendChild(lblHi);
+  }
+
+  container.appendChild(labelsRow);
+
+  // Footer: wear count + condition icons
+  const footer = document.createElement("div");
+  footer.className = "temp-bar-footer";
+
+  const wearText = document.createElement("span");
+  wearText.className = "temp-bar-wear-count";
+  wearText.textContent = weatherStats.wearCount === 1 ? "1 wear" : `${weatherStats.wearCount} wears`;
+  footer.appendChild(wearText);
+
+  if (weatherStats.hadRain) {
+    const rainIcon = document.createElement("span");
+    rainIcon.className = "temp-bar-condition-icon temp-bar-rain";
+    rainIcon.setAttribute("aria-label", "worn in rain");
+    rainIcon.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      aria-hidden="true">
+      <path d="M20 17.58A5 5 0 0 0 18 8h-1.26A8 8 0 1 0 4 16.25"/>
+      <line x1="8" y1="19" x2="8" y2="21"/>
+      <line x1="8" y1="23" x2="8" y2="23.01"/>
+      <line x1="12" y1="21" x2="12" y2="23"/>
+      <line x1="12" y1="17" x2="12" y2="17.01"/>
+      <line x1="16" y1="19" x2="16" y2="21"/>
+      <line x1="16" y1="23" x2="16" y2="23.01"/>
+    </svg>`;
+    footer.appendChild(rainIcon);
+  }
+
+  if (weatherStats.hadWind) {
+    const windIcon = document.createElement("span");
+    windIcon.className = "temp-bar-condition-icon temp-bar-wind";
+    windIcon.setAttribute("aria-label", "worn in wind");
+    windIcon.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+      aria-hidden="true">
+      <path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"/>
+      <path d="M9.6 4.6A2 2 0 1 1 11 8H2"/>
+      <path d="M12.6 19.4A2 2 0 1 0 14 16H2"/>
+    </svg>`;
+    footer.appendChild(windIcon);
+  }
+
+  container.appendChild(footer);
+
+  section.hidden = false;
+}
+
 function renderSelectedGarment(garment) {
   const panel = document.getElementById("selected-garment-panel");
   if (!panel) return;
@@ -541,6 +771,7 @@ async function init() {
     selectedGarmentID = pickInitialGarmentID(currentGarments, currentPins);
 
     renderHero(data.outfit, data.sharedBy ?? null, data.sharedByUsername ?? null);
+    renderWeatherBar(data.weatherStats ?? null);
     renderOutfitPhoto(data.outfit, currentPins);
     renderGarments(currentGarments);
     renderSelectedGarment(currentGarments.find((g) => g.id === selectedGarmentID) ?? currentGarments[0] ?? null);
