@@ -69,6 +69,11 @@ function avatarInitials(displayName, username) {
   return source.charAt(0).toUpperCase();
 }
 
+function profileImageUrl(profileImagePath) {
+  if (!profileImagePath) return null;
+  return `${CDN_BASE}/profiles/${profileImagePath}`;
+}
+
 function renderProfile(data) {
   const { profile, garmentCount, sharedOutfitCount, activityCount } = data;
 
@@ -77,7 +82,25 @@ function renderProfile(data) {
   document.title = `${displayName} — TrailLayers`;
 
   const avatarEl = document.getElementById("profile-avatar");
-  if (avatarEl) avatarEl.textContent = avatarInitials(profile.displayName, profile.username);
+  if (avatarEl) {
+    avatarEl.replaceChildren();
+
+    const imageUrl = profileImageUrl(profile.profileImagePath);
+    if (imageUrl) {
+      const img = document.createElement("img");
+      img.src = imageUrl;
+      img.alt = "";
+      img.loading = "eager";
+      img.decoding = "async";
+      img.addEventListener("error", () => {
+        avatarEl.replaceChildren();
+        avatarEl.textContent = avatarInitials(profile.displayName, profile.username);
+      }, { once: true });
+      avatarEl.appendChild(img);
+    } else {
+      avatarEl.textContent = avatarInitials(profile.displayName, profile.username);
+    }
+  }
 
   const nameEl = document.getElementById("profile-name");
   if (nameEl) nameEl.textContent = displayName;
