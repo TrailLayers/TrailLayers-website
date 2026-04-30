@@ -146,6 +146,19 @@ function renderHero(outfit, sharedBy, sharedByUsername) {
   }
 }
 
+function renderDescription(outfit) {
+  const el = document.getElementById("outfit-description");
+  if (!el) return;
+
+  const text = outfit.description?.trim();
+  if (text) {
+    el.textContent = text;
+    el.hidden = false;
+  } else {
+    el.hidden = true;
+  }
+}
+
 function renderOutfitPhoto(outfit, pins) {
   const imageWrap = document.getElementById("outfit-image-wrap");
   const helper = document.getElementById("photo-helper");
@@ -771,6 +784,7 @@ async function init() {
     selectedGarmentID = pickInitialGarmentID(currentGarments, currentPins);
 
     renderHero(data.outfit, data.sharedBy ?? null, data.sharedByUsername ?? null);
+    renderDescription(data.outfit);
     renderWeatherBar(data.weatherStats ?? null);
     renderOutfitPhoto(data.outfit, currentPins);
     renderGarments(currentGarments);
