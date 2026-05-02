@@ -496,6 +496,25 @@ h3 {
   white-space: nowrap;
 }
 
+.footer-social {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-shrink: 0;
+  font-size: 0.875rem;
+}
+
+.footer-social a {
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+
+.footer-social a:hover {
+  color: var(--ink);
+}
+
 @media (max-width: 1120px) {
   .hero {
     grid-template-columns: 1fr;
