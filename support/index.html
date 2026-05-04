@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support — TrailLayers</title>
+  <meta name="description" content="Get help with TrailLayers. Browse frequently asked questions or send us a message.">
+  <link rel="icon" type="image/png" href="../assets/traillayers-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    .support-shell {
+      width: min(calc(100% - 2rem), 760px);
+      margin: 0 auto;
+      padding: 3rem 0 6rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: var(--ink); }
+
+    .support-header {
+      margin-bottom: 3.5rem;
+    }
+    .support-header h1 {
+      font-family: "Instrument Serif", Georgia, serif;
+      font-weight: 400;
+      font-size: clamp(2.4rem, 5vw, 3.6rem);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin: 0 0 0.75rem;
+    }
+    .support-header p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.65;
+      margin: 0;
+      max-width: 38rem;
+    }
+
+    /* ── FAQ ───────────────────────────────────────────────── */
+
+    .faq-section {
+      margin-bottom: 4rem;
+    }
+
+    .section-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--forest);
+      margin: 0 0 1.25rem;
+    }
+
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .faq-item {
+      background: var(--surface);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      border-radius: var(--radius-md);
+      box-shadow: 0 4px 16px rgba(17, 37, 53, 0.06);
+      overflow: hidden;
+    }
+
+    .faq-item summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.1rem 1.3rem;
+      font-weight: 600;
+      font-size: 0.98rem;
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+
+    .faq-chevron {
+      flex-shrink: 0;
+      width: 1.4rem;
+      height: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(39, 79, 74, 0.08);
+      border-radius: 50%;
+      transition: transform 0.22s ease, background 0.15s;
+    }
+    .faq-chevron svg {
+      width: 0.7rem;
+      height: 0.7rem;
+      stroke: var(--forest);
+      stroke-width: 2.5;
+      fill: none;
+      transition: transform 0.22s ease;
+    }
+
+    .faq-item[open] .faq-chevron {
+      background: rgba(39, 79, 74, 0.14);
+    }
+    .faq-item[open] .faq-chevron svg {
+      transform: rotate(180deg);
+    }
+
+    .faq-body {
+      padding: 0 1.3rem 1.25rem;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.96rem;
+    }
+    .faq-body a {
+      color: var(--sky);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+    .faq-body p { margin: 0 0 0.6rem; }
+    .faq-body p:last-child { margin-bottom: 0; }
+
+    /* ── Contact form ──────────────────────────────────────── */
+
+    .contact-section {
+      background: var(--surface);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.75);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      padding: 2rem 2rem 0.5rem;
+    }
+
+    .contact-section h2 {
+      font-family: "Instrument Serif", Georgia, serif;
+      font-weight: 400;
+      font-size: 1.8rem;
+      letter-spacing: -0.02em;
+      margin: 0 0 0.4rem;
+    }
+
+    .contact-section .contact-lead {
+      color: var(--muted);
+      font-size: 0.96rem;
+      line-height: 1.6;
+      margin: 0 0 1.5rem;
+    }
+
+    .tally-wrap {
+      /* let the Tally dynamic-height script resize freely */
+      min-height: 24rem;
+    }
+
+    @media (max-width: 520px) {
+      .support-shell {
+        width: min(calc(100% - 1rem), 760px);
+      }
+      .contact-section {
+        padding: 1.4rem 1.2rem 0.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="../" aria-label="TrailLayers home">
+        <img src="../assets/traillayers-icon.png" alt="TrailLayers app icon">
+        <span>TrailLayers</span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav id="site-nav" class="site-nav" aria-label="Primary">
+        <a href="../#screens">Screens</a>
+        <a href="../#about">About</a>
+        <a href="../#use-cases">Use Cases</a>
+        <a class="button button-primary" href="https://apps.apple.com/us/app/traillayers/id6760794709" target="_blank" aria-label="Download TrailLayers on the App Store">
+          Download on the App Store
+        </a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="support-shell">
+        <a class="back-link" href="../">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="9 2 4 7 9 12"/>
+          </svg>
+          Back to TrailLayers
+        </a>
+
+        <div class="support-header">
+          <p class="eyebrow">Help &amp; Support</p>
+          <h1>How can we help?</h1>
+          <p>Browse the FAQ below, or use the contact form if you need something else.</p>
+        </div>
+
+        <!-- ── FAQ ─────────────────────────────────────────── -->
+        <section class="faq-section" aria-labelledby="faq-heading">
+          <p class="section-label" id="faq-heading">Frequently asked questions</p>
+
+          <div class="faq-list">
+
+            <details class="faq-item">
+              <summary>
+                How do I add a garment to my wardrobe?
+                <span class="faq-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 12 12"><polyline points="2 4 6 8 10 4"/></svg>
+                </span>
+              </summary>
+              <div class="faq-body">
+                <p>Tap the <strong>+</strong> button on the Wardrobe tab. You can add a photo from your camera roll or take one in-app, then fill in details like category, insulation, waterproofing, and size. Fields you don't know can be left blank and edited later.</p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>
+                How do I build an outfit?
+                <span class="faq-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 12 12"><polyline points="2 4 6 8 10 4"/></svg>
+                </span>
+              </summary>
+              <div class="faq-body">
+                <p>Go to the <strong>Outfits</strong> tab and tap <strong>+</strong>. Give the outfit a name, then select garments from your wardrobe to include. Saved outfits can be reused across activity logs so you don't have to re-select the same gear every time.</p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>
+                How do I log an activity?
+                <span class="faq-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 12 12"><polyline points="2 4 6 8 10 4"/></svg>
+                </span>
+              </summary>
+              <div class="faq-body">
+                <p>Tap <strong>+</strong> on the Activity Logs tab. Select the garments or an existing outfit you wore, then add weather conditions, effort level, and comfort feedback. Ratings you enter are used to surface garment insights over time.</p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>
+                Can I share an outfit publicly?
+                <span class="faq-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 12 12"><polyline points="2 4 6 8 10 4"/></svg>
+                </span>
+              </summary>
+              <div class="faq-body">
+                <p>Yes. Each outfit has a privacy toggle in its detail view. When set to public, a shareable link is generated that anyone can view without needing the app. You can switch it back to private at any time.</p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>
+                Is my gear data private by default?
+                <span class="faq-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 12 12"><polyline points="2 4 6 8 10 4"/></svg>
+                </span>
+              </summary>
+              <div class="faq-body">
+                <p>Yes. Your wardrobe, activity logs, and outfits are private to your account. Only outfits you explicitly mark as public are visible to others. See our <a href="../privacy.html">Privacy Policy</a> for the full details on data storage.</p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>
+                What iOS version does TrailLayers require?
+                <span class="faq-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 12 12"><polyline points="2 4 6 8 10 4"/></svg>
+                </span>
+              </summary>
+              <div class="faq-body">
+                <p>TrailLayers requires iOS 17 or later and is optimized for iPhone. iPad is not currently supported.</p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>
+                How do I delete my account and data?
+                <span class="faq-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 12 12"><polyline points="2 4 6 8 10 4"/></svg>
+                </span>
+              </summary>
+              <div class="faq-body">
+                <p>Go to <strong>Settings → Account → Delete Account</strong> inside the app. This permanently removes your profile, wardrobe, outfits, and activity logs. The action cannot be undone.</p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>
+                I found a bug or something isn't working — what should I do?
+                <span class="faq-chevron" aria-hidden="true">
+                  <svg viewBox="0 0 12 12"><polyline points="2 4 6 8 10 4"/></svg>
+                </span>
+              </summary>
+              <div class="faq-body">
+                <p>Use the contact form below and describe what happened, what you expected, and your iOS version. Screenshots are helpful if you can attach them. We'll follow up by email.</p>
+              </div>
+            </details>
+
+          </div>
+        </section>
+
+        <!-- ── Contact form ────────────────────────────────── -->
+        <section class="contact-section" aria-labelledby="contact-heading">
+          <h2 id="contact-heading">Send us a message</h2>
+          <p class="contact-lead">Can't find what you're looking for? Fill out the form and we'll get back to you.</p>
+
+          <div class="tally-wrap">
+            <iframe
+              data-tally-src="https://tally.so/embed/rjLxAN?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
+              loading="lazy"
+              width="100%"
+              height="400"
+              frameborder="0"
+              marginheight="0"
+              marginwidth="0"
+              title="TrailLayers support form"
+            ></iframe>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <p>TrailLayers &mdash; <a href="mailto:TrailLayers@proton.me">TrailLayers@proton.me</a>
+        &nbsp;&middot;&nbsp;
+        <a href="../privacy.html">Privacy Policy</a>
+        &nbsp;&middot;&nbsp;
+        &copy; <span id="year"></span> TrailLayers
+      </p>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/traillayers" target="_blank" aria-label="TrailLayers on Instagram">Instagram</a>
+        <a href="https://www.strava.com/clubs/2086063" target="_blank" aria-label="TrailLayers Strava Club">Strava</a>
+        <a href="https://github.com/TrailLayers/TrailLayers-website" target="_blank" aria-label="TrailLayers on GitHub">GitHub</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Mobile nav toggle (mirrors script.js behavior)
+    const toggle = document.querySelector(".menu-toggle");
+    const nav = document.querySelector(".site-nav");
+    if (toggle && nav) {
+      toggle.addEventListener("click", () => {
+        const open = nav.classList.toggle("is-open");
+        toggle.setAttribute("aria-expanded", open);
+      });
+    }
+  </script>
+
+  <!-- Tally embed script -->
+  <script>
+    var d = document,
+      w = "https://tally.so/widgets/embed.js",
+      v = function () {
+        "undefined" != typeof Tally
+          ? Tally.loadEmbeds()
+          : d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach(function (e) {
+              e.src = e.dataset.tallySrc;
+            });
+      };
+    if ("undefined" != typeof Tally) v();
+    else if (d.querySelector('script[src="' + w + '"]') == null) {
+      var s = d.createElement("script");
+      s.src = w;
+      s.onload = v;
+      s.onerror = v;
+      d.body.appendChild(s);
+    }
+  </script>
+</body>
+</html>
